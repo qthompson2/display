@@ -20,4 +20,17 @@ function TextBox:draw()
     term.write(self.text)
 end
 
+function TextBox:getPos()
+    return self.x, self.y
+end
+
+function TextBox:setPos(x, y)
+    self.x = x or self.x
+    self.y = y or self.y
+end
+
+function TextBox:getArea()
+    return self.x, self.y, self.x + #self.text - 1, self.y
+end
+
 return TextBox
