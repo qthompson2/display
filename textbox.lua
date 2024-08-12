@@ -20,7 +20,7 @@ function Textbox:getContent()
 end
 
 function Textbox:setContent(content)
-    self.content = content
+    self.content = tostring(content) ~= nil and content or error("Invalid value for content!")
 end
 
 function Textbox:findPos(x, y)
