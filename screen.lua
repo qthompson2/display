@@ -2,7 +2,7 @@ Screen = {}
 
 function Screen:new(elements)
     local obj = {}
-    obj.width, obj.length = term.getSize()
+    obj.cols, obj.rows = term.getSize()
     obj.elements = elements or {}
 
     setmetatable(obj, self)
@@ -17,10 +17,13 @@ function Screen:draw()
     end
 end
 
-function Screen:findPos(x, y)
+function Screen:findPos(x, y, mode)
     for i, element in ipairs(self.elements) do
-        local x1, y1, x2, _ = element:getArea()
-        if x >= x1 and x <= x2 and y == y1 then
+        if element:findPos(x, y) and mode == "recursive" then
+            element:select()
+            return i, element:findPos(x, y)
+        elseif element:findPos(x, y) then
+            element:select()
             return i, element
         end
     end
@@ -66,10 +69,20 @@ function Screen:run()
             self:terminate()
         elseif event == "mouse_click" then
             local x, y = eventData[3], eventData[4]
-            local _, element = self:findPos(x, y)
+            local _, element = self:findPos(x, y, "recursive")
             if element then
                 if element.action then
-                    element.action()
+                    element:click()
+                end
+            end
+        elseif event == "mouse_scroll" then
+            local dir, x, y = eventData[2], eventData[3], eventData[4]
+            local _, element = self:findPos(x, y)
+            if element and element.scrollDown then
+                if dir == -1 then
+                    element:scrollUp()
+                else
+                    element:scrollDown()
                 end
             end
         end
