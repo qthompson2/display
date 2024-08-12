@@ -1,18 +1,13 @@
-ElementType = {
-    TEXTBOX = 1,
-    BUTTON = 2,
-    ROW = 3,
-    COLUMN = 4
-}
+ElementType = require("elementType")
 
 Element = {}
 
-function Element:new(x, y, palette, type)
+function Element:new(x, y, palette)
     local obj = {}
     obj.x = x
     obj.y = y
     obj.palette = palette
-    obj.type = type
+    obj.type = nil
 
     setmetatable(obj, self)
     self.__index = self
@@ -26,6 +21,34 @@ end
 function Element:setPos(x, y)
     self.x = x or self.x
     self.y = y or self.y
+end
+
+function Element:findPos(x, y)
+    error("Element:findPos() must be implemented in child classes!")
+end
+
+function Element:draw(x, y)
+    error("Element:draw() must be implemented in child classes!")
+end
+
+function Element:getPalette()
+    return self.palette
+end
+
+function Element:setPalette(palette)
+    self.palette = palette
+end
+
+function Element:getType()
+    return self.type
+end
+
+function Element:getSelected()
+    return self.selected
+end
+
+function Element:setSelected(selected)
+    self.selected = (selected == true or selected == false) and selected or error("Invalid value for selected!")
 end
 
 return Element
