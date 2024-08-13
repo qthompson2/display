@@ -1,5 +1,3 @@
-ElementType = require("elementType")
-
 Element = {}
 
 function Element:new(x, y, palette)
