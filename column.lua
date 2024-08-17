@@ -1,0 +1,36 @@
+ElementType = require("elementType")
+Container = require("container")
+
+Column = {}
+setmetatable(Column, {__index = Container})
+
+function Column:new(x, y, size, palette)
+    local obj = Container:new({}, x, y, size, palette)
+    obj.type = ElementType.COLUMN
+
+    setmetatable(obj, self)
+    self.__index = self
+
+    return obj
+end
+
+function Column:draw(x, y)
+    self:setPos(x, y)
+
+    if self:getSelected() then
+        self.palette:applySelected()
+    else
+        self.palette:applyStandard()
+    end
+
+    for i = 1, self:getSize() do
+        term.setCursorPos(self.x, self.y + i - 1)
+        term.write("\149")
+    end
+
+    for i, element in ipairs(self:getVisibleElements()) do
+        element:draw(self.x + 1, self.y + i - 1)
+    end
+end
+
+return Column

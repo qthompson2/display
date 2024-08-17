@@ -19,10 +19,16 @@ end
 function Container:add(element)
     if element.getType == nil then
         error("Invalid element!")
-    elseif element:getType() == ElementType.Button or element:getType() == ElementType.Textbox then
+    elseif element:getType() == ElementType.BUTTON or element:getType() == ElementType.TEXTBOX then
         table.insert(self.elements, element)
     else
         error("Invalid element type!")
+    end
+end
+
+function Container:addBulk(elements)
+    for _, element in ipairs(elements) do
+        self:add(element)
     end
 end
 
@@ -48,16 +54,20 @@ end
 
 function Container:scroll(direction)
     if direction == -1 then
-        self.current_selection = self.current_selection - 1
+        if self.current_selection > 1 then
+            self.current_selection = self.current_selection - 1
 
-        if self.current_selection < self.start_index then
-            self.start_index = self.start_index - 1
+            if self.current_selection < self.start_index then
+                self.start_index = self.start_index - 1
+            end
         end
     elseif direction == 1 then
-        self.current_selection = self.current_selection + 1
+        if self.current_selection < #self.elements then
+            self.current_selection = self.current_selection + 1
 
-        if self.current_selection > self.size then
-            self.start_index = self.start_index + 1
+            if self.current_selection > self.size then
+                self.start_index = self.start_index + 1
+            end
         end
     elseif direction ~= 0 then
         error("Invalid direction!")
@@ -75,15 +85,25 @@ function Container:getVisibleElements()
 end
 
 function Container:getElementAt(x, y)
-    local local_x, local_y = self:getPos()
+    local _, local_y = self:getPos()
 
-    for i, element in ipairs(self:getVisibleElements()) do
-        local_y = local_y + i - 1
+    local elements = self:getVisibleElements()
 
-        if y == local_y and x >= local_x and x <= #element.content then
-            return element
-        end
+    if elements[y - local_y + 1] and elements[y - local_y + 1]:findPos(x, y) then
+        return elements[y - local_y + 1]
     end
-
-    return nil
 end
+
+function Container:findPos(x, y)
+    error("Container:findPos() must be implemented in child classes!")
+end
+
+function Container:getSize()
+    return self.size
+end
+
+function Container:setSize(size)
+    self.size = type(size) == "number" and size or error("Invalid value for size!")
+end
+
+return Container

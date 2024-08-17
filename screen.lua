@@ -1,3 +1,5 @@
+ElementType = require("elementType")
+
 Screen = {}
 
 function Screen:new(elements)
@@ -17,17 +19,18 @@ function Screen:draw()
     end
 end
 
-function Screen:findPos(x, y, mode)
-    for i, element in ipairs(self.elements) do
-        if element:findPos(x, y) and mode == "recursive" then
-            element:select()
-            return i, element:findPos(x, y)
+function Screen:getElementAt(x, y)
+    for _, element in ipairs(self.elements) do
+        if element:getType() == ElementType.COLUMN or element:getType() == ElementType.ROW then
+            local sub_element = element:getElementAt(x, y)
+
+            if sub_element ~= nil then
+                return element, sub_element
+            end
         elseif element:findPos(x, y) then
-            element:select()
-            return i, element
+            return element, nil
         end
     end
-    return nil
 end
 
 function Screen:add(element)
@@ -68,25 +71,30 @@ function Screen:run()
         if event == "terminate" then
             self:terminate()
         elseif event == "mouse_click" then
-            local x, y = eventData[3], eventData[4]
-            local _, element = self:findPos(x, y, "recursive")
+            local button, x, y = eventData[2], eventData[3], eventData[4]
+            local element, sub_element = self:getElementAt(x, y)
+
             if element then
-                if element.action then
-                    element:click()
+                if element:getType() == ElementType.BUTTON then
+                    element:getAction()()
+                elseif sub_element then
+                    if sub_element:getType() == ElementType.BUTTON then
+                        sub_element:getAction()()
+                    end
                 end
             end
         elseif event == "mouse_scroll" then
             local dir, x, y = eventData[2], eventData[3], eventData[4]
-            local _, element = self:findPos(x, y)
-            if element and element.scrollDown then
-                if dir == -1 then
-                    element:scrollUp()
-                else
-                    element:scrollDown()
+
+            local container_element, _ = self:getElementAt(x, y)
+
+            if container_element then
+                if container_element:getType() == ElementType.COLUMN or container_element:getType() == ElementType.ROW then
+                    container_element:scroll(dir)
                 end
             end
         end
     end
-end
+end 
 
 return Screen
