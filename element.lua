@@ -6,6 +6,7 @@ function Element:new(x, y, palette)
     obj.y = y
     obj.palette = palette
     obj.type = nil
+    obj.selected = false
 
     setmetatable(obj, self)
     self.__index = self

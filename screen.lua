@@ -1,5 +1,10 @@
 ElementType = require("elementType")
 
+UpdateTargets = {
+    SCREEN = "screen",
+    DATA = "data"
+}
+
 Screen = {}
 
 function Screen:new(elements)
@@ -61,38 +66,49 @@ function Screen:terminate()
     self.running = false
 end
 
+function Screen:handleInput()
+    local eventData = {os.pullEventRaw()}
+    local event = eventData[1]
+
+    if event == "terminate" then
+        self:terminate()
+    elseif event == "mouse_click" then
+        local button, x, y = eventData[2], eventData[3], eventData[4]
+        local element, sub_element = self:getElementAt(x, y)
+
+        if element then
+            if element:getType() == ElementType.BUTTON then
+                element:getAction()()
+            elseif sub_element then
+                if sub_element:getType() == ElementType.BUTTON then
+                    sub_element:getAction()()
+                end
+            end
+        end
+    elseif event == "mouse_scroll" then
+        local dir, x, y = eventData[2], eventData[3], eventData[4]
+
+        local container_element, _ = self:getElementAt(x, y)
+
+        if container_element then
+            if container_element:getType() == ElementType.COLUMN or container_element:getType() == ElementType.ROW then
+                container_element:scroll(dir)
+            end
+        end
+    end
+end
+
 function Screen:run()
     self.running = true
+    self.next_update_target = UpdateTargets.SCREEN
     while self.running do
-        self:draw()
-        local eventData = {os.pullEventRaw()}
-        local event = eventData[1]
-
-        if event == "terminate" then
-            self:terminate()
-        elseif event == "mouse_click" then
-            local button, x, y = eventData[2], eventData[3], eventData[4]
-            local element, sub_element = self:getElementAt(x, y)
-
-            if element then
-                if element:getType() == ElementType.BUTTON then
-                    element:getAction()()
-                elseif sub_element then
-                    if sub_element:getType() == ElementType.BUTTON then
-                        sub_element:getAction()()
-                    end
-                end
-            end
-        elseif event == "mouse_scroll" then
-            local dir, x, y = eventData[2], eventData[3], eventData[4]
-
-            local container_element, _ = self:getElementAt(x, y)
-
-            if container_element then
-                if container_element:getType() == ElementType.COLUMN or container_element:getType() == ElementType.ROW then
-                    container_element:scroll(dir)
-                end
-            end
+        if self.next_update_target == UpdateTargets.SCREEN then
+            self:draw()
+            self:handleInput()
+            self.next_update_target = UpdateTargets.DATA
+        elseif self.next_update_target == UpdateTargets.DATA then
+            --Not Implemented Yet
+            self.next_update_target = UpdateTargets.SCREEN
         end
     end
 end 
