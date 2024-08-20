@@ -1,12 +1,12 @@
 Element = require("element")
-ElementType = require("elementType")
+ElementTypes = require("elementTypes")
 
 Textbox = {}
 setmetatable(Textbox, {__index = Element})
 
 function Textbox:new(content, x, y, palette)
     local obj = Element:new(x, y, palette)
-    obj.type = ElementType.TEXTBOX
+    obj.type = ElementTypes.TEXTBOX
     obj.content = content
 
     setmetatable(obj, self)

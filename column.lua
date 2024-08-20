@@ -1,4 +1,4 @@
-ElementType = require("elementType")
+ElementTypes = require("elementTypes")
 Container = require("container")
 
 Column = {}
@@ -6,7 +6,7 @@ setmetatable(Column, {__index = Container})
 
 function Column:new(x, y, size, palette)
     local obj = Container:new({}, x, y, size, palette)
-    obj.type = ElementType.COLUMN
+    obj.type = ElementTypes.COLUMN
 
     setmetatable(obj, self)
     self.__index = self

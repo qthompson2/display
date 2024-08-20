@@ -1,4 +1,4 @@
-ElementType = require("elementType")
+ElementTypes = require("elementTypes")
 
 UpdateTargets = {
     SCREEN = "screen",
@@ -26,7 +26,7 @@ end
 
 function Screen:getElementAt(x, y)
     for _, element in ipairs(self.elements) do
-        if element:getType() == ElementType.COLUMN or element:getType() == ElementType.ROW then
+        if element:getType() == ElementTypes.COLUMN or element:getType() == ElementTypes.ROW then
             local sub_element = element:getElementAt(x, y)
 
             if sub_element ~= nil then
@@ -77,10 +77,10 @@ function Screen:handleInput()
         local element, sub_element = self:getElementAt(x, y)
 
         if element then
-            if element:getType() == ElementType.BUTTON then
+            if element:getType() == ElementTypes.BUTTON then
                 element:getAction()()
             elseif sub_element then
-                if sub_element:getType() == ElementType.BUTTON then
+                if sub_element:getType() == ElementTypes.BUTTON then
                     sub_element:getAction()()
                 end
             end
@@ -91,7 +91,7 @@ function Screen:handleInput()
         local container_element, _ = self:getElementAt(x, y)
 
         if container_element then
-            if container_element:getType() == ElementType.COLUMN or container_element:getType() == ElementType.ROW then
+            if container_element:getType() == ElementTypes.COLUMN or container_element:getType() == ElementTypes.ROW then
                 container_element:scroll(dir)
             end
         end

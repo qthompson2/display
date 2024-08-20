@@ -19,7 +19,7 @@ end
 function Container:add(element)
     if element.getType == nil then
         error("Invalid element!")
-    elseif element:getType() == ElementType.BUTTON or element:getType() == ElementType.TEXTBOX then
+    elseif element:getType() == ElementTypes.BUTTON or element:getType() == ElementTypes.TEXTBOX then
         table.insert(self.elements, element)
     else
         error("Invalid element type!")
