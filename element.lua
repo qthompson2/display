@@ -47,7 +47,11 @@ function Element:getSelected()
 end
 
 function Element:setSelected(selected)
-    self.selected = (selected == true or selected == false) and selected or error("Invalid value for selected!")
+    if type(selected) ~= "boolean" then
+        error("Invalid value for selected!")
+    end
+
+    self.selected = selected
 end
 
 return Element

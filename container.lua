@@ -48,7 +48,7 @@ function Container:getElements()
     return self.elements
 end
 
-function Container:getSelected()
+function Container:getSelectedElement()
     return self.elements[self.current_selection]
 end
 

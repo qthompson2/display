@@ -44,14 +44,10 @@ function DropDownMenu:draw(x, y)
     end
 
     term.setCursorPos(self.x, self.y)
-    
-    if self:getOpen() then
-        term.write(self.open_direction == -1 and "\30" or "\31")
-    end
 
     if self:getOpen() then
         for i, element in ipairs(self:getElements()) do
-            element:draw(self.x, self.y + ((i) * self.open_direction))
+            element:draw(self.x, self.y + ((i - 1) * self.open_direction))
         end
     else
         term.write(self.hidden_text)
