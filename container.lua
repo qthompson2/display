@@ -9,6 +9,15 @@ function Container:new(elements, x, y, size, palette)
     obj.current_selection = 1
     obj.start_index = 1
     obj.size = size
+    obj.max_element_length = 0
+
+    for _, element in ipairs(elements) do
+        if element:getType() == ElementTypes.BUTTON or element:getType() == ElementTypes.TEXTBOX then
+            obj.max_element_length = math.max(obj.max_element_length, #element:getContent())
+        else
+            error("Invalid element type!")
+        end
+    end
 
     setmetatable(obj, self)
     self.__index = self
@@ -21,6 +30,7 @@ function Container:add(element)
         error("Invalid element!")
     elseif element:getType() == ElementTypes.BUTTON or element:getType() == ElementTypes.TEXTBOX then
         table.insert(self.elements, element)
+        self.max_element_length = math.max(self.max_element_length, #element:getContent())
     else
         error("Invalid element type!")
     end
@@ -34,6 +44,14 @@ end
 
 function Container:remove(index)
     if index >= 1 and index <= #self.elements then
+        if self.max_element_length == #self.elements[index]:getContent() then
+            self.max_element_length = 0
+
+            for _, element in ipairs(self.elements) do
+                self.max_element_length = math.max(self.max_element_length, #element:getContent())
+            end
+        end
+
         table.remove(self.elements, index)
     else
         error("Invalid index!")

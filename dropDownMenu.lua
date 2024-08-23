@@ -74,4 +74,20 @@ function DropDownMenu:getOpenDirection()
     return self.open_direction
 end
 
+function DropDownMenu:setHiddenText(text)
+    self.hidden_text = text
+end
+
+function DropDownMenu:getHiddenText()
+    return self.hidden_text
+end
+
+function DropDownMenu:findPos(x, y)
+    if self:getOpen() then
+        return x >= self.x and x <= self.x + self.max_element_length and y >= self.y and y <= self.y + self.size
+    else
+        return x >= self.x and x <= self.x + #self.hidden_text and y == self.y
+    end
+end
+
 return DropDownMenu

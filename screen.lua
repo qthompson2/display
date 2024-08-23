@@ -7,10 +7,11 @@ UpdateTargets = {
 
 Screen = {}
 
-function Screen:new(elements)
+function Screen:new(elements, bg)
     local obj = {}
     obj.cols, obj.rows = term.getSize()
     obj.elements = elements or {}
+    obj.bg = bg or colours.black
 
     setmetatable(obj, self)
     self.__index = self
@@ -21,6 +22,7 @@ function Screen:draw()
     term.clear()
     for i, element in ipairs(self.elements) do
         element:draw()
+        term.setBackgroundColor(self.bg)
     end
 end
 
@@ -31,6 +33,18 @@ function Screen:getElementAt(x, y)
 
             if sub_element ~= nil then
                 return element, sub_element
+            end
+        elseif element:getType() == ElementTypes.DROPDOWNMENU then
+            if element:getOpen() then
+                local sub_element = element:getElementAt(x, y)
+
+                if sub_element ~= nil then
+                    return element, sub_element
+                end
+            else
+                if element:findPos(x, y) then
+                    return element, nil
+                end
             end
         elseif element:findPos(x, y) then
             return element, nil
@@ -72,11 +86,16 @@ function Screen:handleInput()
 
     if event == "terminate" then
         self:terminate()
+    elseif event == "key" then
+        local key = eventData[2]
+        
     elseif event == "mouse_click" then
         local button, x, y = eventData[2], eventData[3], eventData[4]
         local element, sub_element = self:getElementAt(x, y)
 
-        if element then
+        
+
+        if element and button == 1 then
             if element:getType() == ElementTypes.BUTTON then
                 element:getAction()()
             elseif sub_element then
@@ -85,6 +104,17 @@ function Screen:handleInput()
                 end
             end
         end
+
+        if element and button == 2 then
+            if element:getType() == ElementTypes.DROPDOWNMENU then
+                element:setOpen(not element:getOpen())
+            elseif sub_element then
+                if sub_element:getType() == ElementTypes.DROPDOWNMENU then
+                    sub_element:setOpen(not sub_element:getOpen())
+                end
+            end
+        end
+
     elseif event == "mouse_scroll" then
         local dir, x, y = eventData[2], eventData[3], eventData[4]
 
