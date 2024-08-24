@@ -91,7 +91,7 @@ function Container:scroll(direction)
         if self.current_selection < #self.elements then
             self.current_selection = self.current_selection + 1
 
-            if self.current_selection > self.size then
+            if self.current_selection > self.start_index + self.size - 1 then
                 self.start_index = self.start_index + 1
             end
         end
