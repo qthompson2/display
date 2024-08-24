@@ -34,6 +34,15 @@ function DropDownMenu:addBulk(elements)
     end
 end
 
+function DropDownMenu:clearSelection()
+    self:setSelected(false)
+    self:setOpen(false)
+
+    for _, element in ipairs(self.elements) do
+        element:clearSelection()
+    end
+end
+
 function DropDownMenu:draw(x, y)
     self:setPos(x, y)
 

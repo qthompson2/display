@@ -70,6 +70,14 @@ function Container:getSelectedElement()
     return self.elements[self.current_selection]
 end
 
+function Container:clearSelection()
+    self:setSelected(false)
+
+    for _, element in ipairs(self.elements) do
+        element:clearSelection()
+    end
+end
+
 function Container:scroll(direction)
     if direction == -1 then
         if self.current_selection > 1 then

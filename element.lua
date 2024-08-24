@@ -54,4 +54,8 @@ function Element:setSelected(selected)
     self.selected = selected
 end
 
+function Element:clearSelection()
+    self.selected = false
+end
+
 return Element
