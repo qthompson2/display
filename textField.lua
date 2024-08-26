@@ -72,7 +72,10 @@ function TextField:draw(x, y)
         if self.input == "" then
             term.write(self.content:sub(1, self.length))
         else
-            term.write(self.input:sub(1, self.length).."...")
+            term.write(self.input:sub(1, self.length))
+            if #self.input > self.length then
+                term.write("...")
+            end
         end
     end
 end
