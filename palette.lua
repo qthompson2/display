@@ -18,6 +18,18 @@ function Palette:new(standard_fg, standard_bg, selected_fg, selected_bg)
     return obj
 end
 
+function Palette:apply(name)
+    term.setTextColor(self[name].fg)
+    term.setBackgroundColor(self[name].bg)
+end
+
+function Palette:add(name, fg, bg)
+    self[name] = {
+        fg = fg,
+        bg = bg
+    }
+end
+
 function Palette:applyStandard()
     term.setTextColor(self.standard.fg)
     term.setBackgroundColor(self.standard.bg)

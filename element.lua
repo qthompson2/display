@@ -8,6 +8,8 @@ function Element:new(x, y, palette)
     obj.type = nil
     obj.selected = false
 
+    obj.cols, obj.rows = term.getSize()
+
     setmetatable(obj, self)
     self.__index = self
     return obj
