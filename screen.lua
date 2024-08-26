@@ -94,14 +94,13 @@ function Screen:terminate()
     self.running = false
 end
 
-function Screen:handleInput()
-    local eventData = {os.pullEventRaw()}
-    local event = eventData[1]
+function Screen:handleInput(event_data)
+    local event = event_data[1]
 
     if event == "terminate" then
         self:terminate()
     elseif event == "key" then
-        local key = eventData[2]
+        local key = event_data[2]
         if key == keys.tab then
             if self.current_selection then
                 self.elements[self.current_selection]:clearSelection()
@@ -124,18 +123,22 @@ function Screen:handleInput()
         elseif key == keys.up then
             local element = self.elements[self.current_selection]
 
-            if element:getType() == ElementTypes.COLUMN or element:getType() == ElementTypes.ROW or element:getType() == ElementTypes.DROPDOWNMENU then
-                element:getSelectedElement():setSelected(false)
-                element:scroll(-1)
-                element:getSelectedElement():setSelected(true)
+            if element then
+                if element:getType() == ElementTypes.COLUMN or element:getType() == ElementTypes.DROPDOWNMENU then
+                    element:getSelectedElement():setSelected(false)
+                    element:scroll(-1)
+                    element:getSelectedElement():setSelected(true)
+                end
             end
         elseif key == keys.down then
             local element = self.elements[self.current_selection]
 
-            if element:getType() == ElementTypes.COLUMN or element:getType() == ElementTypes.ROW or element:getType() == ElementTypes.DROPDOWNMENU then
-                element:getSelectedElement():setSelected(false)
-                element:scroll(1)
-                element:getSelectedElement():setSelected(true)
+            if element then
+                if element:getType() == ElementTypes.COLUMN or element:getType() == ElementTypes.DROPDOWNMENU then
+                    element:getSelectedElement():setSelected(false)
+                    element:scroll(1)
+                    element:getSelectedElement():setSelected(true)
+                end
             end
         elseif key == keys.enter then
             local element = self.elements[self.current_selection]
@@ -151,7 +154,7 @@ function Screen:handleInput()
             end
         end
     elseif event == "mouse_click" then
-        local button, x, y = eventData[2], eventData[3], eventData[4]
+        local button, x, y = event_data[2], event_data[3], event_data[4]
         local element, sub_element = self:getElementAt(x, y)
 
         self:clearSelection()
@@ -177,7 +180,7 @@ function Screen:handleInput()
         end
 
     elseif event == "mouse_scroll" then
-        local dir, x, y = eventData[2], eventData[3], eventData[4]
+        local dir, x, y = event_data[2], event_data[3], event_data[4]
 
         local container_element, _ = self:getElementAt(x, y)
 
@@ -193,15 +196,18 @@ end
 
 function Screen:run()
     self.running = true
-    self.next_update_target = UpdateTargets.SCREEN
+    os.startTimer(1)
+
     while self.running do
-        if self.next_update_target == UpdateTargets.SCREEN then
+        local event_data = {os.pullEventRaw()}
+        local event = event_data[1]
+    
+        if event ~= "timer" then
             self:draw()
-            self:handleInput()
-            self.next_update_target = UpdateTargets.DATA
-        elseif self.next_update_target == UpdateTargets.DATA then
+            self:handleInput(event_data)
+        elseif event == "timer" then
             --Not Implemented Yet
-            self.next_update_target = UpdateTargets.SCREEN
+            os.startTimer(1)
         end
     end
 end 
