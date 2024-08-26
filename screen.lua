@@ -88,6 +88,14 @@ function Screen:remove(element)
     end
 end
 
+function Screen:getIndex(element)
+    for i, e in ipairs(self.elements) do
+        if e == element then
+            return i
+        end
+    end
+end
+
 function Screen:terminate()
     term.clear()
     term.setCursorPos(1, 1)
@@ -101,6 +109,7 @@ function Screen:handleInput(event_data)
         self:terminate()
     elseif event == "key" then
         local key = event_data[2]
+
         if key == keys.tab then
             if self.current_selection then
                 self.elements[self.current_selection]:clearSelection()
@@ -152,12 +161,54 @@ function Screen:handleInput(event_data)
                     end
                 end
             end
+        elseif key == keys.backspace then
+            local element = self.elements[self.current_selection]
+
+            if element then
+                if element:getType() == ElementTypes.TEXTFIELD then
+                    element:backspace()
+                end
+            end
+        elseif key == keys.left then
+            local element = self.elements[self.current_selection]
+
+            if element then
+                if element:getType() == ElementTypes.TEXTFIELD then
+                    element:scroll(-1)
+                end
+            end
+        elseif key == keys.right then
+            local element = self.elements[self.current_selection]
+
+            if element then
+                if element:getType() == ElementTypes.TEXTFIELD then
+                    element:scroll(1)
+                end
+            end
+        end
+    elseif event == "char" then
+        local char = event_data[2]
+        local element = self.elements[self.current_selection]
+
+        if element then
+            if element:getType() == ElementTypes.TEXTFIELD then
+                element:appendInput(char)
+            end
         end
     elseif event == "mouse_click" then
         local button, x, y = event_data[2], event_data[3], event_data[4]
         local element, sub_element = self:getElementAt(x, y)
 
         self:clearSelection()
+
+        if element then
+            element:setSelected(true)
+            self.current_selection = self:getIndex(element)
+        end
+        if sub_element then
+            sub_element:setSelected(true)
+            self.current_selection = self:getIndex(element)
+        end
 
         if element and button == 1 then
             if element:getType() == ElementTypes.BUTTON then
@@ -196,7 +247,7 @@ end
 
 function Screen:run()
     self.running = true
-    os.startTimer(1)
+    os.startTimer(4)
 
     while self.running do
         local event_data = {os.pullEventRaw()}
@@ -207,7 +258,7 @@ function Screen:run()
             self:handleInput(event_data)
         elseif event == "timer" then
             --Not Implemented Yet
-            os.startTimer(1)
+            os.startTimer(4)
         end
     end
 end 

@@ -3,7 +3,8 @@ ElementTypes = {
     BUTTON = "button",
     ROW = "row",
     COLUMN = "column",
-    DROPDOWNMENU = "dropdownmenu"
+    DROPDOWNMENU = "dropdownmenu",
+    TEXTFIELD = "textfield"
 }
 
 return ElementTypes

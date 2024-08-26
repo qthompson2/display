@@ -29,10 +29,19 @@ end
 
 function TextField:appendInput(character)
     self.input = self.input .. character
+    self.current_index = self.current_index + 1
+
+    if self.start_index + self.current_index > self.length then
+        self:scroll(1)
+    end
 end
 
 function TextField:backspace()
     self.input = self.input:sub(1, -2)
+    self.current_index = self.current_index - 1
+    if #self.input >= self.length then
+        self:scroll(-1)
+    end
 end
 
 function TextField:scroll(dir)
@@ -54,16 +63,16 @@ function TextField:draw(x, y)
         self.palette:applySelected()
 
         term.setCursorPos(self.x, self.y)
-        term.write(self.input:sub(self.start_index, self.start_index + self.length - 1))
+        term.write(self.input:sub(self.start_index, self.start_index + self.length - 1).."_")
     else
         self.palette:applyStandard()
 
         term.setCursorPos(self.x, self.y)
 
         if self.input == "" then
-            term.write(self.placeholder_text:sub(1, self.length))
+            term.write(self.content:sub(1, self.length))
         else
-            term.write(self.input:sub(1, self.length))
+            term.write(self.input:sub(1, self.length).."...")
         end
     end
 end
