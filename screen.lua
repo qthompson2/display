@@ -1,10 +1,5 @@
 ElementTypes = require("elementTypes")
 
-UpdateTargets = {
-    SCREEN = "screen",
-    DATA = "data"
-}
-
 Screen = {}
 
 function Screen:new(elements, bg)
@@ -13,6 +8,7 @@ function Screen:new(elements, bg)
     obj.elements = elements or {}
     obj.bg = bg or colours.black
     obj.current_selection = nil
+    obj.data_functions = {}
 
     setmetatable(obj, self)
     self.__index = self
@@ -245,9 +241,27 @@ function Screen:handleInput(event_data)
     end
 end
 
+function Screen:handleData()
+    for _, data_function in ipairs(self.data_functions) do
+        data_function(self)
+    end
+end
+
+function Screen:addDataFunction(data_function)
+    table.insert(self.data_functions, data_function)
+end
+
+function Screen:removeDataFunction(data_function)
+    for i, l in ipairs(self.data_functions) do
+        if l == data_function then
+            table.remove(self.data_functions, i)
+        end
+    end
+end
+
 function Screen:run()
     self.running = true
-    os.startTimer(4)
+    os.startTimer(1)
 
     while self.running do
         local event_data = {os.pullEventRaw()}
@@ -257,8 +271,8 @@ function Screen:run()
             self:draw()
             self:handleInput(event_data)
         elseif event == "timer" then
-            --Not Implemented Yet
-            os.startTimer(4)
+            self:handleData()
+            os.startTimer(1)
         end
     end
 end 
