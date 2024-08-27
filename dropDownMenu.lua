@@ -23,6 +23,7 @@ function DropDownMenu:add(element)
     elseif element:getType() == ElementTypes.BUTTON then
         table.insert(self.elements, element)
         self:setSize(#self.elements)
+        self.max_element_length = math.max(self.max_element_length, element:len())
     else
         error("Invalid element type!")
     end
@@ -96,6 +97,14 @@ function DropDownMenu:findPos(x, y)
         return x >= self.x and x <= self.x + self.max_element_length and y >= self.y and y <= self.y + self.size
     else
         return x >= self.x and x <= self.x + #self.hidden_text and y == self.y
+    end
+end
+
+function DropDownMenu:len()
+    if self:getOpen() then
+        return self.max_element_length
+    else
+        return #self.hidden_text
     end
 end
 

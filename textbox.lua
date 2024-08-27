@@ -40,4 +40,8 @@ function Textbox:draw(x, y)
     term.write(self.content)
 end
 
+function Textbox:len()
+    return #self.content
+end
+
 return Textbox

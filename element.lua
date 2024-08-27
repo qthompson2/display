@@ -60,4 +60,8 @@ function Element:clearSelection()
     self.selected = false
 end
 
+function Element:len()
+    error("Element:len() must be implemented in child classes!")
+end
+
 return Element

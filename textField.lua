@@ -80,4 +80,8 @@ function TextField:draw(x, y)
     end
 end
 
+function TextField:len()
+    return self.length
+end
+
 return TextField

@@ -37,4 +37,8 @@ function Column:findPos(x, y)
     return x >= self.x and x <= self.x + self.max_element_length and y >= self.y and y <= self.y + self.size
 end
 
+function Column:len()
+    return self.max_element_length
+end
+
 return Column

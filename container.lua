@@ -132,4 +132,8 @@ function Container:setSize(size)
     self.size = type(size) == "number" and size or error("Invalid value for size!")
 end
 
+function Container:len()
+    error("Container:len() must be implemented in child classes!")
+end
+
 return Container

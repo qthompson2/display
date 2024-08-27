@@ -4,7 +4,8 @@ ElementTypes = {
     ROW = "row",
     COLUMN = "column",
     DROPDOWNMENU = "dropdownmenu",
-    TEXTFIELD = "textfield"
+    TEXTFIELD = "textfield",
+    ELEMENTBUNDLE = "elementbundle"
 }
 
 return ElementTypes
