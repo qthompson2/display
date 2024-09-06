@@ -118,7 +118,7 @@ function Screen:handleInput(event_data)
             end
 
             if self.current_selection then
-                if self.elements[self.current_selection]:getType() == ElementTypes.COLUMN or self.elements[self.current_selection]:getType() == ElementTypes.ROW then
+                if self.elements[self.current_selection]:getType() == ElementTypes.COLUMN or self.elements[self.current_selection]:getType() == ElementTypes.ROW or self.elements[self.current_selection]:getType() == ElementTypes.BUNDLE then
                     self.elements[self.current_selection]:getSelectedElement():setSelected(true)
                 elseif self.elements[self.current_selection]:getType() == ElementTypes.DROPDOWNMENU then
                     self.elements[self.current_selection]:setOpen(true)
@@ -171,6 +171,10 @@ function Screen:handleInput(event_data)
             if element then
                 if element:getType() == ElementTypes.TEXTFIELD then
                     element:scroll(-1)
+                elseif element:getType() == ElementTypes.ROW or element:getType() == ElementTypes.BUNDLE then
+                    element:getSelectedElement():setSelected(false)
+                    element:scroll(-1)
+                    element:getSelectedElement():setSelected(true)
                 end
             end
         elseif key == keys.right then
@@ -179,6 +183,10 @@ function Screen:handleInput(event_data)
             if element then
                 if element:getType() == ElementTypes.TEXTFIELD then
                     element:scroll(1)
+                elseif element:getType() == ElementTypes.ROW or element:getType() == ElementTypes.BUNDLE then
+                    element:getSelectedElement():setSelected(false)
+                    element:scroll(1)
+                    element:getSelectedElement():setSelected(true)
                 end
             end
         end

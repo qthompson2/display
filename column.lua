@@ -37,6 +37,16 @@ function Column:findPos(x, y)
     return x >= self.x and x <= self.x + self.max_element_length and y >= self.y and y <= self.y + self.size
 end
 
+function Column:getElementAt(x, y)
+    local _, local_y = self:getPos()
+
+    local elements = self:getVisibleElements()
+
+    if elements[y - local_y + 1] and elements[y - local_y + 1]:findPos(x, y) then
+        return elements[y - local_y + 1]
+    end
+end
+
 function Column:len()
     return self.max_element_length
 end

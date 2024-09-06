@@ -110,16 +110,6 @@ function Container:getVisibleElements()
     return visible_elements
 end
 
-function Container:getElementAt(x, y)
-    local _, local_y = self:getPos()
-
-    local elements = self:getVisibleElements()
-
-    if elements[y - local_y + 1] and elements[y - local_y + 1]:findPos(x, y) then
-        return elements[y - local_y + 1]
-    end
-end
-
 function Container:findPos(x, y)
     error("Container:findPos() must be implemented in child classes!")
 end

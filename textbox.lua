@@ -24,7 +24,7 @@ function Textbox:setContent(content)
 end
 
 function Textbox:findPos(x, y)
-    return x >= self.x and x <= self.x + #self.content and y == self.y
+    return x >= self.x and x <= self.x + self:len() and y == self.y
 end
 
 function Textbox:draw(x, y)
