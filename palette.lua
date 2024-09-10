@@ -23,21 +23,21 @@ function Palette:apply(name)
     term.setBackgroundColor(self[name].bg)
 end
 
-function Palette:add(name, fg, bg)
+function Palette:update(name, fg, bg)
     self[name] = {
         fg = fg,
         bg = bg
     }
 end
 
+--Deprecated
 function Palette:applyStandard()
-    term.setTextColor(self.standard.fg)
-    term.setBackgroundColor(self.standard.bg)
+    self:apply("standard")
 end
 
+--Deprecated
 function Palette:applySelected()
-    term.setTextColor(self.selected.fg)
-    term.setBackgroundColor(self.selected.bg)
+    self:apply("selected")
 end
 
 return Palette

@@ -1,4 +1,5 @@
 Element = require("element")
+ElementTypes = require("elementTypes")
 
 Container = {}
 setmetatable(Container, {__index = Element})
@@ -12,8 +13,8 @@ function Container:new(elements, x, y, size, palette)
     obj.max_element_length = 0
 
     for _, element in ipairs(elements) do
-        if element:getType() == ElementTypes.BUTTON or element:getType() == ElementTypes.TEXTBOX then
-            obj.max_element_length = math.max(obj.max_element_length, #element:getContent())
+        if element:getType() == ElementTypes.BUTTON or element:getType() == ElementTypes.TEXTBOX or element:getType() == ElementTypes.BUNDLE then
+            obj.max_element_length = math.max(obj.max_element_length, element:len())
         else
             error("Invalid element type!")
         end
@@ -28,9 +29,9 @@ end
 function Container:add(element)
     if element.getType == nil then
         error("Invalid element!")
-    elseif element:getType() == ElementTypes.BUTTON or element:getType() == ElementTypes.TEXTBOX then
+    elseif element:getType() == ElementTypes.BUTTON or element:getType() == ElementTypes.TEXTBOX or element:getType() == ElementTypes.BUNDLE or element:getType() == ElementTypes.TEXTFIELD then
         table.insert(self.elements, element)
-        self.max_element_length = math.max(self.max_element_length, #element:getContent())
+        self.max_element_length = math.max(self.max_element_length, element:len())
     else
         error("Invalid element type!")
     end
@@ -48,7 +49,7 @@ function Container:remove(index)
             self.max_element_length = 0
 
             for _, element in ipairs(self.elements) do
-                self.max_element_length = math.max(self.max_element_length, #element:getContent())
+                self.max_element_length = math.max(self.max_element_length, element:len())
             end
         end
 

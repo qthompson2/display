@@ -5,7 +5,15 @@ ElementTypes = {
     COLUMN = "column",
     DROPDOWNMENU = "dropdownmenu",
     TEXTFIELD = "textfield",
-    ELEMENTBUNDLE = "elementbundle"
+    ELEMENTBUNDLE = "elementbundle",
+
+    checkEquivalency = function(type1, type2)
+        if type1 == type2 then
+            return true
+        else
+            return false
+        end
+    end
 }
 
 return ElementTypes

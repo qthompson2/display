@@ -38,7 +38,7 @@ end
 
 function Screen:getElementAt(x, y)
     for _, element in ipairs(self.elements) do
-        if element:getType() == ElementTypes.COLUMN or element:getType() == ElementTypes.ROW then
+        if element:getType() == ElementTypes.COLUMN or element:getType() == ElementTypes.ROW or element:getType() == ElementTypes.BUNDLE then
             local sub_element = element:getElementAt(x, y)
 
             if sub_element ~= nil then
@@ -151,7 +151,7 @@ function Screen:handleInput(event_data)
             if element then
                 if element:getType() == ElementTypes.BUTTON then
                     element:getAction()()
-                elseif element:getType() == ElementTypes.COLUMN or element:getType() == ElementTypes.ROW or element:getType() == ElementTypes.DROPDOWNMENU then
+                elseif element:getType() == ElementTypes.COLUMN or element:getType() == ElementTypes.ROW or element:getType() == ElementTypes.DROPDOWNMENU or element:getType() == ElementTypes.BUNDLE then
                     if element:getSelectedElement():getType() == ElementTypes.BUTTON then
                         element:getSelectedElement():getAction()()
                     end
@@ -163,6 +163,10 @@ function Screen:handleInput(event_data)
             if element then
                 if element:getType() == ElementTypes.TEXTFIELD then
                     element:backspace()
+                elseif element:getType() == ElementTypes.BUNDLE then
+                    if element:getSelectedElement():getType() == ElementTypes.TEXTFIELD then
+                        element:getSelectedElement():backspace()
+                    end
                 end
             end
         elseif key == keys.left then
@@ -197,6 +201,10 @@ function Screen:handleInput(event_data)
         if element then
             if element:getType() == ElementTypes.TEXTFIELD then
                 element:appendInput(char)
+            elseif element:getType() == ElementTypes.BUNDLE then
+                if element:getSelectedElement():getType() == ElementTypes.TEXTFIELD then
+                    element:getSelectedElement():appendInput(char)
+                end
             end
         end
     elseif event == "mouse_click" then
