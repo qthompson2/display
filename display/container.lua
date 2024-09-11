@@ -1,5 +1,5 @@
-Element = require("element")
-ElementTypes = require("elementTypes")
+Element = require("display.element")
+ElementTypes = require("display.element_types")
 
 Container = {}
 setmetatable(Container, {__index = Element})

@@ -1,4 +1,4 @@
-ElementTypes = require("elementTypes")
+ElementTypes = require("display.element_types")
 
 Screen = {}
 

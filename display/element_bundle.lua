@@ -1,5 +1,5 @@
-ElementTypes = require("elementTypes")
-Container = require("container")
+ElementTypes = require("display.element_types")
+Container = require("display.container")
 
 ElementBundle = {}
 setmetatable(ElementBundle, {__index = Container})

@@ -1,5 +1,5 @@
-Container = require("container")
-ElementTypes = require("elementTypes")
+Container = require("display.container")
+ElementTypes = require("display.element_types")
 
 DropDownMenu = {}
 setmetatable(DropDownMenu, {__index = Container})
