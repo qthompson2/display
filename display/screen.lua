@@ -98,6 +98,10 @@ function Screen:terminate()
     self.running = false
 end
 
+function Screen:terminateAll()
+    error("I don't know how to implement this rn")
+end
+
 function Screen:handleInput(event_data)
     local event = event_data[1]
 

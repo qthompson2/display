@@ -23,6 +23,11 @@ function Palette:apply(name)
     term.setBackgroundColor(self[name].bg)
 end
 
+function Palette:applyInverted(name)
+    term.setTextColor(self[name].bg)
+    term.setBackgroundColor(self[name].fg)
+end
+
 function Palette:update(name, fg, bg)
     self[name] = {
         fg = fg,
