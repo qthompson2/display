@@ -10,6 +10,8 @@ function Screen:new(elements, bg)
     obj.current_selection = nil
     obj.data_functions = {}
 
+    obj.shift_held = false
+
     setmetatable(obj, self)
     self.__index = self
     return obj
@@ -93,6 +95,7 @@ function Screen:getIndex(element)
 end
 
 function Screen:terminate()
+    term.setBackgroundColour(colours.black)
     term.clear()
     term.setCursorPos(1, 1)
     self.running = false
@@ -115,10 +118,30 @@ function Screen:handleInput(event_data)
                 self.elements[self.current_selection]:clearSelection()
             end
 
-            if self.current_selection == nil or self.current_selection >= #self.elements then
-                self.current_selection = 1
+            if self.current_selection == nil then
+                if self.shift_held then
+                    self.current_selection = #self.elements
+                else
+                    self.current_selection = 1
+                end
+            elseif self.current_selection >= #self.elements then
+                if self.shift_held then
+                    self.current_selection = self.current_selection - 1
+                else
+                    self.current_selection = 1
+                end
+            elseif self.current_selection <= 1 then
+                if self.shift_held then
+                    self.current_selection = #self.elements
+                else
+                    self.current_selection = self.current_selection + 1
+                end
             elseif self.current_selection < #self.elements then
-                self.current_selection = self.current_selection + 1
+                if self.shift_held then
+                    self.current_selection = self.current_selection - 1
+                else
+                    self.current_selection = self.current_selection + 1
+                end
             end
 
             if self.current_selection then
@@ -197,6 +220,8 @@ function Screen:handleInput(event_data)
                     element:getSelectedElement():setSelected(true)
                 end
             end
+        elseif key == keys.leftShift or key == keys.rightShift then
+            self.shift_held = true
         end
     elseif event == "char" then
         local char = event_data[2]
@@ -258,6 +283,12 @@ function Screen:handleInput(event_data)
                 container_element:scroll(dir)
             end
         end
+    elseif event == "key_up" then
+        local key = event_data[2]
+
+        if key == keys.leftShift or key == keys.rightShift then
+            self.shift_held = false
+        end
     end
 end
 
@@ -280,21 +311,26 @@ function Screen:removeDataFunction(data_function)
 end
 
 function Screen:run()
+    term.setBackgroundColour(self.bg)
+    term.clear()
     self.running = true
+---@diagnostic disable-next-line: undefined-field
     os.startTimer(1)
 
     while self.running do
+---@diagnostic disable-next-line: undefined-field
         local event_data = {os.pullEventRaw()}
         local event = event_data[1]
-    
+
         if event ~= "timer" then
             self:draw()
             self:handleInput(event_data)
         elseif event == "timer" then
             self:handleData()
+---@diagnostic disable-next-line: undefined-field
             os.startTimer(1)
         end
     end
-end 
+end
 
 return Screen
