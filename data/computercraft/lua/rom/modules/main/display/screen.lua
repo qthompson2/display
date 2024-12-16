@@ -291,7 +291,7 @@ function Screen:onEventRecieved(event_data)
         end
     elseif event == "modem_message" then
         if self.onModemMessageReceived then
-            self:onModemMessageReceived(event_data)
+            self.onModemMessageReceived(event_data)
         end
     end
 end
