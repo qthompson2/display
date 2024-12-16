@@ -105,7 +105,7 @@ function Screen:terminateAll()
     error("I don't know how to implement this rn")
 end
 
-function Screen:handleInput(event_data)
+function Screen:onEventRecieved(event_data)
     local event = event_data[1]
 
     if event == "terminate" then
@@ -289,6 +289,10 @@ function Screen:handleInput(event_data)
         if key == keys.leftShift or key == keys.rightShift then
             self.shift_held = false
         end
+    elseif event == "modem_message" then
+        if self.onModemMessageReceived then
+            self:onModemMessageReceived(event_data)
+        end
     end
 end
 
@@ -300,6 +304,12 @@ end
 
 function Screen:addDataFunction(data_function)
     table.insert(self.data_functions, data_function)
+end
+
+function Screen:addListener(event, listener) --Change this to be better
+    if event == "modem_message" then
+        self.onModemMessageReceived = listener
+    end
 end
 
 function Screen:removeDataFunction(data_function)
@@ -314,20 +324,20 @@ function Screen:run()
     term.setBackgroundColour(self.bg)
     term.clear()
     self.running = true
----@diagnostic disable-next-line: undefined-field
+    ---@diagnostic disable-next-line: undefined-field
     os.startTimer(1)
 
     while self.running do
----@diagnostic disable-next-line: undefined-field
+        ---@diagnostic disable-next-line: undefined-field
         local event_data = {os.pullEventRaw()}
         local event = event_data[1]
 
         if event ~= "timer" then
             self:draw()
-            self:handleInput(event_data)
+            self:onEventRecieved(event_data)
         elseif event == "timer" then
             self:handleData()
----@diagnostic disable-next-line: undefined-field
+            ---@diagnostic disable-next-line: undefined-field
             os.startTimer(1)
         end
     end
