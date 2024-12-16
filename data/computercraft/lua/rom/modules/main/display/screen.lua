@@ -327,6 +327,7 @@ function Screen:run()
     ---@diagnostic disable-next-line: undefined-field
     os.startTimer(1)
 
+    self:draw()
     while self.running do
         ---@diagnostic disable-next-line: undefined-field
         local event_data = {os.pullEventRaw()}
