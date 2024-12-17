@@ -39,7 +39,8 @@ function Screen:clearSelection()
 end
 
 function Screen:getElementAt(x, y)
-    for _, element in ipairs(self.elements) do
+    for i = #self.elements, 1, -1 do
+        local element = self.elements[i]
         if element:getType() == ElementTypes.COLUMN or element:getType() == ElementTypes.ROW or element:getType() == ElementTypes.BUNDLE then
             local sub_element = element:getElementAt(x, y)
 
