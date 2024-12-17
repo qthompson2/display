@@ -13,6 +13,8 @@ function TextField:new(placeholder_text, x, y, palette, length)
     obj.start_index = 1
     obj.current_index = 1
 
+    obj.on_input = nil
+
     setmetatable(obj, self)
     self.__index = self
 
@@ -34,6 +36,10 @@ function TextField:appendInput(character)
     if self.start_index + self.current_index > self.length then
         self:scroll(1)
     end
+
+    if self.on_input then
+        self.on_input(self.input)
+    end
 end
 
 function TextField:backspace()
@@ -41,6 +47,10 @@ function TextField:backspace()
     self.current_index = self.current_index - 1
     if #self.input >= self.length then
         self:scroll(-1)
+    end
+
+    if self.on_input then
+        self.on_input(self.input)
     end
 end
 
@@ -82,6 +92,10 @@ end
 
 function TextField:len()
     return self.length
+end
+
+function TextField:setOnInput(on_input)
+    self.on_input = on_input
 end
 
 return TextField
