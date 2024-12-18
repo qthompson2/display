@@ -79,21 +79,36 @@ function Container:clearSelection()
     end
 end
 
-function Container:scroll(direction)
+function Container:scroll(direction, is_mouse_scroll)
+    is_mouse_scroll = is_mouse_scroll or false
     if direction == -1 then
-        if self.current_selection > 1 then
-            self.current_selection = self.current_selection - 1
-
-            if self.current_selection < self.start_index then
+        if is_mouse_scroll then
+            if self.start_index > 1 then
                 self.start_index = self.start_index - 1
+                self.current_selection = self.start_index
+            end
+        else
+            if self.current_selection > 1 then
+                self.current_selection = self.current_selection - 1
+    
+                if self.current_selection < self.start_index then
+                    self.start_index = self.start_index - 1
+                end
             end
         end
     elseif direction == 1 then
-        if self.current_selection < #self.elements then
-            self.current_selection = self.current_selection + 1
-
-            if self.current_selection > self.start_index + self.size - 1 then
+        if is_mouse_scroll then
+            if self.start_index + self.size - 1 < #self.elements then
                 self.start_index = self.start_index + 1
+                self.current_selection = self.start_index
+            end
+        else
+            if self.current_selection < #self.elements then
+                self.current_selection = self.current_selection + 1
+    
+                if self.current_selection > self.start_index + self.size - 1 then
+                    self.start_index = self.start_index + 1
+                end
             end
         end
     elseif direction ~= 0 then

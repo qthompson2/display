@@ -281,7 +281,7 @@ function Screen:onEventRecieved(event_data)
 
         if container_element then
             if container_element:getType() == ElementTypes.COLUMN or container_element:getType() == ElementTypes.ROW then
-                container_element:scroll(dir)
+                container_element:scroll(dir, true)
             end
         end
     elseif event == "key_up" then
