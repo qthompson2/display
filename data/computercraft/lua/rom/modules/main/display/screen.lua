@@ -335,8 +335,8 @@ function Screen:run()
         local event = event_data[1]
 
         if event ~= "timer" then
-            self:draw()
             self:onEventRecieved(event_data)
+            self:draw()
         elseif event == "timer" then
             self:handleData()
             ---@diagnostic disable-next-line: undefined-field
