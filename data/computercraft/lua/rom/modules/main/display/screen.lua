@@ -1,6 +1,7 @@
 ElementTypes = require("display.element_types")
 
 DEFAULT_LISTENERS = require("display.default_listeners")
+TIMER_RATE = 0
 
 Screen = {}
 
@@ -109,6 +110,11 @@ function Screen:onEventRecieved(event_data)
 
     if self.listeners[event] then
         self.listeners[event](self, event_data)
+
+        if event == "timer" then
+            ---@diagnostic disable-next-line: undefined-field
+            os.startTimer(TIMER_RATE)
+        end
     end
 end
 
@@ -129,7 +135,7 @@ function Screen:run()
     term.clear()
     self.running = true
     ---@diagnostic disable-next-line: undefined-field
-    os.startTimer(1)
+    os.startTimer(TIMER_RATE)
 
     self:draw()
     while self.running do
