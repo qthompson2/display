@@ -23,7 +23,7 @@ end
 function Screen:draw()
     term.clear()
     for i, element in ipairs(self.elements) do
-        if self.current_selection == i then
+        if self.current_selection == i and element ~= nil then
             element:setSelected(true)
         else
             element:setSelected(false)
