@@ -100,6 +100,24 @@ function DropDownMenu:findPos(x, y)
     end
 end
 
+function DropDownMenu:getElementAt(x, y)
+    local _, local_y = self:getPos()
+
+    if self:getOpen() then
+        local elements = self:getElements()
+
+        for i, element in ipairs(elements) do
+            if element:findPos(x, y) then
+                return element
+            end
+        end
+    else
+        if x >= self.x and x <= self.x + #self.hidden_text and y == self.y then
+            return self
+        end
+    end
+end
+
 function DropDownMenu:len()
     if self:getOpen() then
         return self.max_element_length
