@@ -1,27 +1,9 @@
 ElementTypes = require("display.element_types")
 Element = require("display.element")
 DEFAULT_CHARSET = require("display.default_charset")
+COLOUR_CONVERSION_TABLE = require("display.colour_conversion_table")
 
 BigTextbox = {}
-
-BigTextbox.COLOURS = {
-	[colours.white] = "0",
-	[colours.orange] = "1",
-	[colours.magenta] = "2",
-	[colours.lightBlue] = "3",
-	[colours.yellow] = "4",
-	[colours.lime] = "5",
-	[colours.pink] = "6",
-	[colours.grey] = "7",
-	[colours.lightGrey] = "8",
-	[colours.cyan] = "9",
-	[colours.purple] = "a",
-	[colours.blue] = "b",
-	[colours.brown] = "c",
-	[colours.green] = "d",
-	[colours.red] = "e",
-	[colours.black] = "f",
-}
 
 setmetatable(BigTextbox, {__index = Element})
 
@@ -51,17 +33,19 @@ function BigTextbox:new(content, x, y, palette)
 		}
 	}
 
+	obj.plaintext = content
+
 	for i = 1, #content do
 		local char = content:sub(i, i)
 		if DEFAULT_CHARSET[char] then
 			for j = 1, 8 do
 				for k = 1, #DEFAULT_CHARSET[char][j] do
 					if DEFAULT_CHARSET[char][j]:sub(k, k) == "1" then
-						obj.content.standard[j] = obj.content.standard[j] .. BigTextbox.COLOURS[palette.standard.fg]
-						obj.content.selected[j] = obj.content.selected[j] .. BigTextbox.COLOURS[palette.selected.fg]
+						obj.content.standard[j] = obj.content.standard[j] .. COLOUR_CONVERSION_TABLE[palette.standard.fg]
+						obj.content.selected[j] = obj.content.selected[j] .. COLOUR_CONVERSION_TABLE[palette.selected.fg]
 					else
-						obj.content.standard[j] = obj.content.standard[j] .. BigTextbox.COLOURS[palette.standard.bg]
-						obj.content.selected[j] = obj.content.selected[j] .. BigTextbox.COLOURS[palette.selected.bg]
+						obj.content.standard[j] = obj.content.standard[j] .. COLOUR_CONVERSION_TABLE[palette.standard.bg]
+						obj.content.selected[j] = obj.content.selected[j] .. COLOUR_CONVERSION_TABLE[palette.selected.bg]
 					end
 				end
 			end
@@ -69,11 +53,11 @@ function BigTextbox:new(content, x, y, palette)
 			for j = 1, #DEFAULT_CHARSET.unknown do
 				for k = 1, #DEFAULT_CHARSET.unknown[j] do
 					if DEFAULT_CHARSET.unknown[j]:sub(k, k) == "1" then
-						obj.content.standard[j] = obj.content.standard[j] .. BigTextbox.COLOURS[palette.standard.fg]
-						obj.content.selected[j] = obj.content.selected[j] .. BigTextbox.COLOURS[palette.selected.fg]
+						obj.content.standard[j] = obj.content.standard[j] .. COLOUR_CONVERSION_TABLE[palette.standard.fg]
+						obj.content.selected[j] = obj.content.selected[j] .. COLOUR_CONVERSION_TABLE[palette.selected.fg]
 					else
-						obj.content.standard[j] = obj.content.standard[j] .. BigTextbox.COLOURS[palette.standard.bg]
-						obj.content.selected[j] = obj.content.selected[j] .. BigTextbox.COLOURS[palette.selected.bg]
+						obj.content.standard[j] = obj.content.standard[j] .. COLOUR_CONVERSION_TABLE[palette.standard.bg]
+						obj.content.selected[j] = obj.content.selected[j] .. COLOUR_CONVERSION_TABLE[palette.selected.bg]
 					end
 				end
 			end
@@ -84,6 +68,65 @@ function BigTextbox:new(content, x, y, palette)
 	self.__index = self
 
 	return obj
+end
+
+function BigTextbox:setContent(content)
+	self.content = {
+		standard = {
+			[1] = "",
+			[2] = "",
+			[3] = "",
+			[4] = "",
+			[5] = "",
+			[6] = "",
+			[7] = "",
+			[8] = "",
+		},
+		selected = {
+			[1] = "",
+			[2] = "",
+			[3] = "",
+			[4] = "",
+			[5] = "",
+			[6] = "",
+			[7] = "",
+			[8] = "",
+		}
+	}
+	self.plaintext = content
+
+	for i = 1, #content do
+		local char = content:sub(i, i)
+		if DEFAULT_CHARSET[char] then
+			for j = 1, 8 do
+				for k = 1, #DEFAULT_CHARSET[char][j] do
+					if DEFAULT_CHARSET[char][j]:sub(k, k) == "1" then
+						self.content.standard[j] = self.content.standard[j] .. COLOUR_CONVERSION_TABLE[self.palette.standard.fg]
+						self.content.selected[j] = self.content.selected[j] .. COLOUR_CONVERSION_TABLE[self.palette.selected.fg]
+					else
+						self.content.standard[j] = self.content.standard[j] .. COLOUR_CONVERSION_TABLE[self.palette.standard.bg]
+						self.content.selected[j] = self.content.selected[j] .. COLOUR_CONVERSION_TABLE[self.palette.selected.bg]
+					end
+				end
+			end
+		else
+			for j = 1, #DEFAULT_CHARSET.unknown do
+				for k = 1, #DEFAULT_CHARSET.unknown[j] do
+					if DEFAULT_CHARSET.unknown[j]:sub(k, k) == "1" then
+						self.content.standard[j] = self.content.standard[j] .. COLOUR_CONVERSION_TABLE[self.palette.standard.fg]
+						self.content.selected[j] = self.content.selected[j] .. COLOUR_CONVERSION_TABLE[self.palette.selected.fg]
+					else
+						self.content.standard[j] = self.content.standard[j] .. COLOUR_CONVERSION_TABLE[self.palette.standard.bg]
+						self.content.selected[j] = self.content.selected[j] .. COLOUR_CONVERSION_TABLE[self.palette.selected.bg]
+					end
+				end
+			end
+		end
+	end
+end
+
+function BigTextbox:getContent()
+	return self.plaintext
 end
 
 function BigTextbox:draw()
