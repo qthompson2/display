@@ -6,6 +6,8 @@ ElementTypes = {
     DROPDOWNMENU = "dropdownmenu",
     TEXTFIELD = "textfield",
     ELEMENTBUNDLE = "elementbundle",
+    BIGTEXTBOX = "bigtextbox",
+    IMAGE = "image",
 
     checkEquivalency = function(type1, type2)
         if type1 == type2 then

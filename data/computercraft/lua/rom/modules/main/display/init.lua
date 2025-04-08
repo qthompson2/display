@@ -4,6 +4,8 @@ return {
     elements = {
         Element = require("display.element"),
         Textbox = require("display.textbox"),
+        BigTextbox = require("display.big_textbox"),
+        Image = require("display.image"),
         Button = require("display.button"),
         TextField = require("display.text_field"),
     },
