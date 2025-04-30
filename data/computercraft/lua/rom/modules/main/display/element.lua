@@ -32,6 +32,10 @@ function Element:draw(x, y)
     error("Element:draw() must be implemented in child classes!")
 end
 
+function Element:simpleDraw(x, y, monitor)
+    error("Element:simpleDraw() must be implemented in child classes!")
+end
+
 function Element:getPalette()
     return self.palette
 end

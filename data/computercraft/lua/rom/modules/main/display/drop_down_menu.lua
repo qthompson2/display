@@ -64,6 +64,19 @@ function DropDownMenu:draw(x, y)
     end
 end
 
+function DropDownMenu:simpleDraw(x, y, monitor)
+    self:setPos(x, y)
+
+    if self:getOpen() then
+        for i, element in ipairs(self:getElements()) do
+            element:simpleDraw(self.x, self.y + ((i - 1) * self.open_direction), monitor)
+        end
+    else
+        monitor.setCursorPos(self.x, self.y)
+        monitor.write(self.hidden_text)
+    end
+end
+
 function DropDownMenu:setOpen(open)
     if type(open) ~= "boolean" then
         error("Invalid value for open!")

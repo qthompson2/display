@@ -29,6 +29,19 @@ function ElementBundle:draw(x, y)
     end
 end
 
+function ElementBundle:simpleDraw(x, y, monitor)
+    self:setPos(x, y)
+
+    for i, element in ipairs(self:getElements()) do
+        if i == 1 then
+            element:simpleDraw(self.x, self.y, monitor)
+        else
+            local cursor_x, _ = monitor.getCursorPos()
+            element:simpleDraw(cursor_x + 1, self.y, monitor)
+        end
+    end
+end
+
 function ElementBundle:len()
     local len = 0
     for _, element in ipairs(self:getElements()) do

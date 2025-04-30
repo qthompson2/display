@@ -15,13 +15,19 @@ function Screen:new(elements, bg)
 
     obj.shift_held = false
 
+    local native_monitor = term.native()
+    native_monitor.type = "monitor"
+
+    obj.monitors = {
+        ["native"] = native_monitor
+    }
+
     setmetatable(obj, self)
     self.__index = self
     return obj
 end
 
 function Screen:draw()
-    term.clear()
     for i, element in ipairs(self.elements) do
         if self.current_selection == i and element ~= nil then
             element:setSelected(true)
@@ -29,8 +35,16 @@ function Screen:draw()
             element:setSelected(false)
         end
 
-        element:draw()
-        term.setBackgroundColor(self.bg)
+        for _, monitor in pairs(self.monitors) do
+            if monitor.type == "monitor" then
+                term.redirect(monitor)
+                element:draw()
+                term.redirect(term.native())
+            elseif monitor.type == "Create_DisplayLink" then
+                element:simpleDraw(nil, nil, monitor)
+                monitor.update()
+            end
+        end
     end
 end
 
@@ -78,6 +92,51 @@ function Screen:addBulk(elements)
     end
 end
 
+function Screen:connectMonitor(monitor_name)
+    local monitor = peripheral.wrap(monitor_name)
+    if monitor then
+        monitor.type = peripheral.getType(monitor_name)
+
+        if monitor.type == "monitor" then
+            monitor.setBackgroundColour(colours.black)
+            monitor.setTextColour(colours.white)
+        end
+
+        monitor.clear()
+        monitor.setCursorPos(1, 1)
+
+        if monitor.type == "Create_DisplayLink" then
+            monitor.update()
+        end
+
+        self.monitors[monitor_name] = monitor
+    end
+end
+
+function Screen:disconnectMonitor(monitor_name)
+    if self.monitors[monitor_name] then
+        local monitor = self.monitors[monitor_name]
+        term.redirect(monitor)
+        self.monitors[monitor_name] = nil
+
+        if monitor.type == "monitor" then
+            monitor.setBackgroundColour(colours.black)
+            monitor.setTextColour(colours.white)
+        end
+
+        term.clear()
+        term.setCursorPos(1, 1)
+
+        if monitor.type == "Create_DisplayLink" then
+            monitor.update()
+        end
+
+        term.redirect(term.native())
+
+        return monitor
+    end
+end
+
 function Screen:remove(element)
     if tonumber(element) then
         return table.remove(self.elements, element)
@@ -99,9 +158,12 @@ function Screen:getIndex(element)
 end
 
 function Screen:terminate()
-    term.setBackgroundColour(colours.black)
-    term.clear()
-    term.setCursorPos(1, 1)
+    local monitor = next(self.monitors)
+    while monitor do
+        monitor = next(self.monitors)
+        self:disconnectMonitor(monitor)
+    end
+
     self.running = false
 end
 
@@ -118,16 +180,12 @@ function Screen:onEventRecieved(event_data)
     end
 end
 
-function Screen:addListener(event, listener)
-    self.listeners[event] = listener
+function Screen:getListener(event)
+    return self.listeners[event]
 end
 
-function Screen:removeDataFunction(data_function)
-    for i, l in ipairs(self.data_functions) do
-        if l == data_function then
-            table.remove(self.data_functions, i)
-        end
-    end
+function Screen:setListener(event, listener)
+    self.listeners[event] = listener
 end
 
 function Screen:run()

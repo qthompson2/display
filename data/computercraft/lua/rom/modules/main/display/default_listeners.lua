@@ -117,10 +117,7 @@ return {
 	end,
 
 	["terminate"] = function(self, _)
-		term.setBackgroundColour(colours.black)
-    	term.clear()
-    	term.setCursorPos(1, 1)
-    	self.running = false
+		self:terminate()
 	end,
 
 	["char"] = function(self, event_data)
@@ -173,6 +170,16 @@ return {
             end
         end
 	end,
+
+    ["monitor_touch"] = function(self, event_data)
+        local monitor, x, y = event_data[2], event_data[3], event_data[4]
+        return -- Not implemented yet
+    end,
+
+    ["monitor_resize"] = function(self, event_data)
+        local monitor = event_data[2]
+        return -- Not implemented yet
+    end,
 
 	["mouse_scroll"] = function(self, event_data)
 		local dir, x, y = event_data[2], event_data[3], event_data[4]

@@ -45,12 +45,23 @@ function Image:new(image_path_or_image, x, y)
 	return obj
 end
 
-function Image:draw()
+function Image:draw(x, y)
+	self:setPos(x, y)
+
 	for i = 1, #self.image do
 		local blank_line = (" "):rep(#self.image[i])
 		term.setCursorPos(self.x, self.y + i - 1)
 		term.blit(blank_line, blank_line, self.image[i])
 	end
+end
+
+function Image:simpleDraw(x, y, monitor)
+	self:setPos(x, y)
+
+	monitor.setCursorPos(self.x, self.y)
+	monitor.write("Image not supported.")
+
+	return nil --Image is not compatible with displays that do not support colour.
 end
 
 function Image:setImage(image)

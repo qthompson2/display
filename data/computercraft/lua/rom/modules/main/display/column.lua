@@ -33,6 +33,19 @@ function Column:draw(x, y)
     end
 end
 
+function Column:simpleDraw(x, y, monitor)
+    self:setPos(x, y)
+
+    for i = 1, self:getSize() do
+        monitor.setCursorPos(self.x, self.y + i - 1)
+        monitor.write(" ")
+    end
+
+    for i, element in ipairs(self:getVisibleElements()) do
+        element:simpleDraw(self.x + 1, self.y + i - 1, monitor)
+    end
+end
+
 function Column:findPos(x, y)
     return x >= self.x and x <= self.x + self.max_element_length and y >= self.y and y <= self.y + self.size
 end

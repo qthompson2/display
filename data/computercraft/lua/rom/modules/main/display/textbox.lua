@@ -40,6 +40,12 @@ function Textbox:draw(x, y)
     term.write(self.content)
 end
 
+function Textbox:simpleDraw(x, y, monitor)
+    self:setPos(x, y)
+    monitor.setCursorPos(self.x, self.y)
+    monitor.write(self.content)
+end
+
 function Textbox:len()
     return #self.content
 end

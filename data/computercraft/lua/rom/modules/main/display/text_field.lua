@@ -90,6 +90,21 @@ function TextField:draw(x, y)
     end
 end
 
+function TextField:simpleDraw(x, y, monitor)
+    self:setPos(x, y)
+
+    monitor.setCursorPos(self.x, self.y)
+
+    if self.input == "" then
+        monitor.write(self.content:sub(1, self.length))
+    else
+        monitor.write(self.input:sub(1, self.length))
+        if #self.input > self.length then
+            monitor.write("...")
+        end
+    end
+end
+
 function TextField:len()
     return self.length
 end

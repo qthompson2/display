@@ -129,7 +129,9 @@ function BigTextbox:getContent()
 	return self.plaintext
 end
 
-function BigTextbox:draw()
+function BigTextbox:draw(x, y)
+	self:setPos(x, y)
+
 	for i = 1, #self.content.standard do
 		local blank_line = (" "):rep(#self.content.standard[i])
 		term.setCursorPos(self.x, self.y + i - 1)
@@ -139,6 +141,15 @@ function BigTextbox:draw()
 			term.blit(blank_line, blank_line, self.content.standard[i])
 		end
 	end
+end
+
+function BigTextbox:simpleDraw(x, y, monitor)
+	self:setPos(x, y)
+	
+	monitor.setCursorPos(self.x, self.y)
+	monitor.write("BigTextbox not supported.")
+
+	return nil -- BigTextbox is not compatible with displays that do not support colour.
 end
 
 function BigTextbox:len()
