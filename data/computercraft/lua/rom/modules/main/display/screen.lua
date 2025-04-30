@@ -28,6 +28,18 @@ function Screen:new(elements, bg)
 end
 
 function Screen:draw()
+    for _, monitor in pairs(self.monitors) do
+        term.redirect(monitor)
+
+        if monitor.type == "monitor" then
+            monitor.setBackgroundColour(self.bg)
+            monitor.setTextColour(colours.white)
+        end
+        
+        term.clear()
+        term.setCursorPos(1, 1)
+    end
+
     for i, element in ipairs(self.elements) do
         if self.current_selection == i and element ~= nil then
             element:setSelected(true)

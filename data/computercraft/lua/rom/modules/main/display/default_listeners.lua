@@ -173,7 +173,34 @@ return {
 
     ["monitor_touch"] = function(self, event_data)
         local monitor, x, y = event_data[2], event_data[3], event_data[4]
-        return -- Not implemented yet
+        if self.monitors[monitor] then
+            local element, sub_element = self:getElementAt(x, y)
+
+            self:clearSelection()
+
+            if element then
+                element:setSelected(true)
+                self.current_selection = self:getIndex(element)
+            end
+            if sub_element then
+                sub_element:setSelected(true)
+                self.current_selection = self:getIndex(element)
+            end
+
+            if element then
+                if element:getType() == ElementTypes.BUTTON then
+                    element:getAction()()
+                elseif element:getType() == ElementTypes.DROPDOWNMENU then
+                    if not element:getOpen() then
+                        element:setOpen(true)
+                    end
+                elseif sub_element then
+                    if sub_element:getType() == ElementTypes.BUTTON then
+                        sub_element:getAction()()
+                    end
+                end
+            end
+        end
     end,
 
     ["monitor_resize"] = function(self, event_data)
