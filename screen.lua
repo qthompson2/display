@@ -3,6 +3,8 @@ ElementTypes = require("display.element_types")
 DEFAULT_LISTENERS = require("display.default_listeners")
 TIMER_RATE = 0
 
+Utils = require("display.utils")
+
 Screen = {}
 
 function Screen:new(elements, bg)
@@ -11,7 +13,8 @@ function Screen:new(elements, bg)
     obj.elements = elements or {}
     obj.bg = bg or colours.black
     obj.current_selection = nil
-    obj.listeners = DEFAULT_LISTENERS
+
+    obj.listeners = Utils.deepCopy(DEFAULT_LISTENERS)
 
     obj.shift_held = false
 

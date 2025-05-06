@@ -1,7 +1,8 @@
+Utils = require("display.utils")
 ElementTypes = require("display.element_types")
 Element = require("display.element")
-DEFAULT_CHARSET = require("display.default_charset")
-COLOUR_CONVERSION_TABLE = require("display.colour_conversion_table")
+DEFAULT_CHARSET = Utils.deepCopy(require("display.default_charset"))
+COLOUR_CONVERSION_TABLE = Utils.deepCopy(require("display.colour_conversion_table"))
 
 BigTextbox = {}
 

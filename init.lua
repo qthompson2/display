@@ -1,3 +1,5 @@
+Utils = require("display.utils")
+
 return {
     Palette = require("display.palette"),
     ElementTypes = require("display.element_types"),
@@ -16,4 +18,6 @@ return {
         ElementBundle = require("display.element_bundle"),
     },
     Screen = require("display.screen"),
+    DEFAULT_CHARSET = Utils.deepCopy(require("display.default_charset")),
+    DEFAULT_LISTENERS = Utils.deepCopy(require("display.default_listeners"))
 }
