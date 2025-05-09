@@ -1,21 +1,13 @@
-ElementTypes = {
-    TEXTBOX = "textbox",
-    BUTTON = "button",
-    ROW = "row",
-    COLUMN = "column",
-    DROPDOWNMENU = "dropdownmenu",
-    TEXTFIELD = "textfield",
-    ELEMENTBUNDLE = "elementbundle",
-    BIGTEXTBOX = "bigtextbox",
-    IMAGE = "image",
-
-    checkEquivalency = function(type1, type2)
-        if type1 == type2 then
-            return true
-        else
-            return false
-        end
-    end
+return {
+	SCREEN = 0,
+	ELEMENT = 1,
+	TEXT_BOX = 2,
+	TEXT_BUTTON = 3,
+	TEXT_INPUT = 4,
+	IMAGE = 5,
+	BIG_TEXT_BOX = 6,
+	CONTAINER = 7,
+	ORDERED_CONTAINER = 8,
+	ROW = 9,
+	COLUMN = 10,
 }
-
-return ElementTypes

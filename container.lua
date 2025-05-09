@@ -1,145 +1,93 @@
-Element = require("display.element")
-ElementTypes = require("display.element_types")
+Element = require("element")
+ElementTypes = require("element_types")
+Utils = require("utils")
 
 Container = {}
 setmetatable(Container, {__index = Element})
 
-function Container:new(elements, x, y, size, palette)
-    local obj = Element:new(x, y, palette)
-    obj.elements = elements
-    obj.current_selection = 1
-    obj.start_index = 1
-    obj.size = size
-    obj.max_element_length = 0
+function Container:new(x, y, width, height, style)
+	local obj = Element:new(x, y, style)
 
-    for _, element in ipairs(elements) do
-        if element:getType() == ElementTypes.BUTTON or element:getType() == ElementTypes.TEXTBOX or element:getType() == ElementTypes.BUNDLE then
-            obj.max_element_length = math.max(obj.max_element_length, element:len())
-        else
-            error("Invalid element type!")
-        end
-    end
+	obj.width = width or 1
+	obj.height = height or 1
 
-    setmetatable(obj, self)
-    self.__index = self
+	obj.type = ElementTypes.CONTAINER
 
-    return obj
+	obj.children = {}
+
+	setmetatable(obj, self)
+	self.__index = self
+
+	return obj
 end
 
-function Container:add(element)
-    if element.getType == nil then
-        error("Invalid element!")
-    elseif element:getType() == ElementTypes.BUTTON or element:getType() == ElementTypes.TEXTBOX or element:getType() == ElementTypes.BUNDLE or element:getType() == ElementTypes.TEXTFIELD then
-        table.insert(self.elements, element)
-        self.max_element_length = math.max(self.max_element_length, element:len())
-    else
-        error("Invalid element type!")
-    end
+function Container:addChild(child)
+	if child == nil then
+		error("Child cannot be nil")
+	end
+
+	table.insert(self.children, child)
 end
 
-function Container:addBulk(elements)
-    for _, element in ipairs(elements) do
-        self:add(element)
-    end
+function Container:removeChild(index)
+	if index == nil then
+		error("Index cannot be nil")
+	end
+
+	if index < 1 or index > #self.children then
+		error("Index out of bounds")
+	end
+
+	return table.remove(self.children, index)
 end
 
-function Container:remove(index)
-    if index >= 1 and index <= #self.elements then
-        if self.max_element_length == #self.elements[index]:getContent() then
-            self.max_element_length = 0
+function Container:getChild(index)
+	if index == nil then
+		error("Index cannot be nil")
+	end
 
-            for _, element in ipairs(self.elements) do
-                self.max_element_length = math.max(self.max_element_length, element:len())
-            end
-        end
+	if index < 1 or index > #self.children then
+		error("Index out of bounds")
+	end
 
-        table.remove(self.elements, index)
-    else
-        error("Invalid index!")
-    end
+	return self.children[index]
 end
 
-function Container:setElements(elements)
-    self.elements = type(elements) == "table" and elements or error("Invalid value for elements!")
+function Container:getChildren()
+	return Utils.deepCopy(self.children)
 end
 
-function Container:getElements()
-    return self.elements
+function Container:isWithin(x1, y1, x2, y2)
+	local cur_x, cur_y = self:getPos()
+	local end_x = cur_x + self.width - 1
+	local end_y = cur_y + self.height - 1
+
+	return (x1 <= end_x and x2 >= cur_x and y1 <= end_y and y2 >= cur_y)
 end
 
-function Container:getSelectedElement()
-    return self.elements[self.current_selection]
-end
+function Container:draw(start_x, start_y, end_x, end_y)
+	if self.style.hidden then
+		return
+	end
 
-function Container:clearSelection()
-    self:setSelected(false)
+	self:setPos(start_x, start_y)
+	end_x = end_x or start_x + self.width - 1
+	end_y = end_y or start_y + self.height - 1
 
-    for _, element in ipairs(self.elements) do
-        element:clearSelection()
-    end
-end
+	for _, child in ipairs(self.children) do
+		local child_x, child_y = child:getPos()
+		local cur_x, cur_y = self:getScrollPos()
+		local x, y = self:getPos()
 
-function Container:scroll(direction, is_mouse_scroll)
-    is_mouse_scroll = is_mouse_scroll or false
-    if direction == -1 then
-        if is_mouse_scroll then
-            if self.start_index > 1 then
-                self.start_index = self.start_index - 1
-                self.current_selection = self.start_index
-            end
-        else
-            if self.current_selection > 1 then
-                self.current_selection = self.current_selection - 1
-    
-                if self.current_selection < self.start_index then
-                    self.start_index = self.start_index - 1
-                end
-            end
-        end
-    elseif direction == 1 then
-        if is_mouse_scroll then
-            if self.start_index + self.size - 1 < #self.elements then
-                self.start_index = self.start_index + 1
-                self.current_selection = self.start_index
-            end
-        else
-            if self.current_selection < #self.elements then
-                self.current_selection = self.current_selection + 1
-    
-                if self.current_selection > self.start_index + self.size - 1 then
-                    self.start_index = self.start_index + 1
-                end
-            end
-        end
-    elseif direction ~= 0 then
-        error("Invalid direction!")
-    end
-end
-
-function Container:getVisibleElements()
-    local visible_elements = {}
-
-    for i = self.start_index, self.start_index + self.size - 1 do
-        table.insert(visible_elements, self.elements[i])
-    end
-
-    return visible_elements
-end
-
-function Container:findPos(x, y)
-    error("Container:findPos() must be implemented in child classes!")
-end
-
-function Container:getSize()
-    return self.size
-end
-
-function Container:setSize(size)
-    self.size = type(size) == "number" and size or error("Invalid value for size!")
-end
-
-function Container:len()
-    error("Container:len() must be implemented in child classes!")
+		if child:isWithin(cur_x, cur_y, cur_x + self.width - 1, cur_y + self.height - 1) then
+			child:draw(
+				x + child_x - 1,
+				y + child_y - 1,
+				math.min(end_x, start_x + self.width - 1),
+				math.min(end_y, start_y + self.height - 1)
+			)
+		end
+	end
 end
 
 return Container

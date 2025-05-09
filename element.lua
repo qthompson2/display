@@ -1,71 +1,80 @@
+ElementTypes = require("element_types")
+Style = require("style")
+
 Element = {}
 
-function Element:new(x, y, palette)
-    local obj = {}
-    obj.x = x
-    obj.y = y
-    obj.palette = palette
-    obj.type = nil
-    obj.selected = false
+function Element:new(x, y, style)
+	local obj = {}
 
-    obj.cols, obj.rows = term.getSize()
+	obj.x = x or 1
+	obj.y = y or 1
 
-    setmetatable(obj, self)
-    self.__index = self
-    return obj
+	obj.style = style or Style:new()
+	if style ~= nil then
+		obj.allow_style_override = false
+	else
+		obj.allow_style_override = true
+	end
+	obj.style_override = nil
+
+	obj.type = ElementTypes.ELEMENT
+
+	obj.disabled = false
+
+	setmetatable(obj, self)
+	self.__index = self
+
+	return obj
+end
+
+function Element:draw(start_x, start_y, end_x, end_y)
+	error("Element:draw() must be overridden in subclasses!")
+end
+
+function Element:isWithin(x1, y1, x2, y2)
+	error("Element:isWithin() must be overridden in subclasses!")
+end
+
+function Element:getDimensions()
+	if self.width == nil or self.height == nil then
+		error("Element:getDimensions() must be overridden in subclasses!")
+	end
+	return self.x, self.y, self.x + self.width - 1, self.y + self.height - 1
 end
 
 function Element:getPos()
-    return self.x, self.y
+	return self.x, self.y
 end
 
 function Element:setPos(x, y)
-    self.x = x or self.x
-    self.y = y or self.y
+	self.x = x or self.x
+	self.y = y or self.y
 end
 
-function Element:findPos(x, y)
-    error("Element:findPos() must be implemented in child classes!")
+function Element:getStyle()
+	return self.style
 end
 
-function Element:draw(x, y)
-    error("Element:draw() must be implemented in child classes!")
+function Element:setStyle(style)
+	self.style = style or self.style
 end
 
-function Element:simpleDraw(x, y, monitor)
-    error("Element:simpleDraw() must be implemented in child classes!")
+function Element:getStyleOverride()
+	if self.allow_style_override then
+		return self.style_override
+	else
+		return self.style
+	end
 end
 
-function Element:getPalette()
-    return self.palette
-end
-
-function Element:setPalette(palette)
-    self.palette = palette
+function Element:setStyleOverride(style)
+	if self.allow_style_override then
+		self.style_override = style or self.style_override
+	end
 end
 
 function Element:getType()
-    return self.type
-end
-
-function Element:getSelected()
-    return self.selected
-end
-
-function Element:setSelected(selected)
-    if type(selected) ~= "boolean" then
-        error("Invalid value for selected!")
-    end
-
-    self.selected = selected
-end
-
-function Element:clearSelection()
-    self.selected = false
-end
-
-function Element:len()
-    error("Element:len() must be implemented in child classes!")
+	return self.type
 end
 
 return Element
