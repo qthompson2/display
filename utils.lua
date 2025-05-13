@@ -32,8 +32,29 @@ local function split(str, sep)
     return result
 end
 
+local function wrap(str, width)
+    local result = {}
+    local currentLine = ""
+    for word in str:gmatch("%S+") do
+        if #currentLine + #word + 1 > width and #currentLine > 0 then
+            table.insert(result, currentLine)
+            currentLine = word
+        else
+            if #currentLine > 0 then
+                currentLine = currentLine .. " "
+            end
+            currentLine = currentLine .. word
+        end
+    end
+    if #currentLine > 0 then
+        table.insert(result, currentLine)
+    end
+    return result
+end
+
 return {
     deepCopy = deepCopy,
     merge = merge,
     split = split,
+    wrap = wrap,
 }

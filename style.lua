@@ -1,6 +1,7 @@
 Style = {}
 
 function Style:new(options)
+	options = options or {}
 	options = {
 		text = options.text or colours.white,
 		text_selected = options.text_selected or colours.black,

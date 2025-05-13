@@ -2,6 +2,7 @@ return {
 	Style = require("display.style"),
 	elements = {
 		Element = require("display.element"),
+		Textbox = require("display.textbox"),
 	},
 	containers = {
 		Container = require("display.container"),

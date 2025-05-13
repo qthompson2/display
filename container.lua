@@ -1,7 +1,6 @@
 Element = require("display.element")
 ElementTypes = require("display.element_types")
 Utils = require("display.utils")
-Scrollable = Utils.deepCopy(require("display.scrollable"))
 
 Container = {}
 setmetatable(Container, {__index = Element})
@@ -16,7 +15,7 @@ function Container:new(x, y, width, height, style)
 
 	obj.children = {}
 
-	Utils.merge(obj, Scrollable)
+	obj.scroll_x, obj.scroll_y = 0, 0
 
 	setmetatable(obj, self)
 	self.__index = self
@@ -110,15 +109,34 @@ function Container:draw(start_x, start_y, end_x, end_y)
 	for _, child in ipairs(self.children) do
 		local child_x, child_y = child:getPos()
 
+		child:setStyleOverride(self.style)
 		if child:isWithin(cur_x, cur_y, cur_x + self.width - 1, cur_y + self.height - 1) then
 			child:draw(
-				x + child_x - 1,
-				y + child_y - 1,
+				x + child_x - 1 - cur_x,
+				y + child_y - 1 - cur_y,
+				x,
+				y,
 				math.min(end_x, start_x + self.width - 1),
 				math.min(end_y, start_y + self.height - 1)
 			)
 		end
 	end
+end
+
+function Container:scroll(x, y)
+	if x ~= 0 and x ~= 1 and x ~= -1 then
+		error("Invalid x scroll value: " .. tostring(x))
+	end
+	if y ~= 0 and y ~= 1 and y ~= -1 then
+		error("Invalid y scroll value: " .. tostring(y))
+	end
+
+	self.scroll_x = self.scroll_x + x
+	self.scroll_y = self.scroll_y + y
+end
+
+function Container:getScrollPos()
+	return self.scroll_x, self.scroll_y
 end
 
 return Container

@@ -1,5 +1,3 @@
-Utils = require("display.utils")
-
 Scrollable = {
 	scroll_x = 0,
 	scroll_y = 0,
