@@ -1,6 +1,7 @@
-Element = require("element")
-ElementTypes = require("element_types")
-Utils = require("utils")
+Element = require("display.element")
+ElementTypes = require("display.element_types")
+Utils = require("display.utils")
+Scrollable = Utils.deepCopy(require("display.scrollable"))
 
 Container = {}
 setmetatable(Container, {__index = Element})
@@ -14,6 +15,8 @@ function Container:new(x, y, width, height, style)
 	obj.type = ElementTypes.CONTAINER
 
 	obj.children = {}
+
+	Utils.merge(obj, Scrollable)
 
 	setmetatable(obj, self)
 	self.__index = self
@@ -63,6 +66,29 @@ function Container:isWithin(x1, y1, x2, y2)
 	local end_y = cur_y + self.height - 1
 
 	return (x1 <= end_x and x2 >= cur_x and y1 <= end_y and y2 >= cur_y)
+end 
+
+function Container:clear(start_x, start_y, end_x, end_y)
+	if self.style.hidden then
+		return
+	end
+
+	local x, y = self:getPos()
+	local _, bg = self:getStyleOverride():getOptions("standard")
+	term.setBackgroundColour(bg)
+
+	start_x = start_x or x
+	start_y = start_y or y
+
+	end_x = end_x or start_x + self.width - 1
+	end_y = end_y or start_y + self.height - 1
+
+	for i = start_y, math.min(y + self.height - 1, end_y) do
+		for j = start_x, math.min(x + self.width - 1, end_x) do
+			term.setCursorPos(j, i)
+			term.write(" ")
+		end
+	end
 end
 
 function Container:draw(start_x, start_y, end_x, end_y)
@@ -70,14 +96,19 @@ function Container:draw(start_x, start_y, end_x, end_y)
 		return
 	end
 
+	self:clear(start_x, start_y, end_x, end_y)
+
 	self:setPos(start_x, start_y)
+	local x, y = self:getPos()
+	start_x = start_x or x
+	start_y = start_y or y
 	end_x = end_x or start_x + self.width - 1
 	end_y = end_y or start_y + self.height - 1
 
+	local cur_x, cur_y = self:getScrollPos()
+
 	for _, child in ipairs(self.children) do
 		local child_x, child_y = child:getPos()
-		local cur_x, cur_y = self:getScrollPos()
-		local x, y = self:getPos()
 
 		if child:isWithin(cur_x, cur_y, cur_x + self.width - 1, cur_y + self.height - 1) then
 			child:draw(

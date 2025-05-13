@@ -1,5 +1,5 @@
-ElementTypes = require("element_types")
-Style = require("style")
+ElementTypes = require("display.element_types")
+Style = require("display.style")
 
 Element = {}
 
@@ -27,7 +27,7 @@ function Element:new(x, y, style)
 	return obj
 end
 
-function Element:draw(start_x, start_y, end_x, end_y)
+function Element:draw(x, y, start_x, start_y, end_x, end_y)
 	error("Element:draw() must be overridden in subclasses!")
 end
 
