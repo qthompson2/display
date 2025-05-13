@@ -110,7 +110,7 @@ function Container:draw(start_x, start_y, end_x, end_y)
 		local child_x, child_y = child:getPos()
 
 		child:setStyleOverride(self.style)
-		if child:isWithin(cur_x, cur_y, cur_x + self.width - 1, cur_y + self.height - 1) then
+		if child:isWithin(cur_x, cur_y, math.abs(cur_x) + self.width - 1, math.abs(cur_y) + self.height - 1) then
 			child:draw(
 				x + child_x - 1 - cur_x,
 				y + child_y - 1 - cur_y,
