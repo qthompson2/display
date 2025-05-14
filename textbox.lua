@@ -26,6 +26,8 @@ function Textbox:draw(x, y, start_x, start_y, end_x, end_y)
 		return
 	end
 
+	local original_x, original_y = self:getPos()
+
 	self:setPos(x, y)
 	x, y = self:getPos()
 
@@ -55,6 +57,8 @@ function Textbox:draw(x, y, start_x, start_y, end_x, end_y)
 			end
 		end
 	end
+
+	self:setPos(original_x, original_y)
 end
 
 function Textbox:isWithin(x1, y1, x2, y2)

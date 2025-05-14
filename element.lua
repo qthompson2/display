@@ -61,7 +61,7 @@ end
 
 function Element:getStyleOverride()
 	if self.allow_style_override then
-		return self.style_override
+		return self.style_override or self.style
 	else
 		return self.style
 	end

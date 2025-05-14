@@ -65,7 +65,7 @@ function Container:isWithin(x1, y1, x2, y2)
 	local end_y = cur_y + self.height - 1
 
 	return (x1 <= end_x and x2 >= cur_x and y1 <= end_y and y2 >= cur_y)
-end 
+end
 
 function Container:clear(start_x, start_y, end_x, end_y)
 	if self.style.hidden then
@@ -90,15 +90,15 @@ function Container:clear(start_x, start_y, end_x, end_y)
 	end
 end
 
-function Container:draw(start_x, start_y, end_x, end_y)
+function Container:draw(x, y, start_x, start_y, end_x, end_y)
 	if self.style.hidden then
 		return
 	end
 
-	self:clear(start_x, start_y, end_x, end_y)
+	self:clear(x, y, end_x, end_y)
 
-	self:setPos(start_x, start_y)
-	local x, y = self:getPos()
+	self:setPos(x, y)
+	x, y = self:getPos()
 	start_x = start_x or x
 	start_y = start_y or y
 	end_x = end_x or start_x + self.width - 1
