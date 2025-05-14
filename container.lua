@@ -1,6 +1,7 @@
 Element = require("display.element")
 ElementTypes = require("display.element_types")
 Utils = require("display.utils")
+Output = require("display.output")
 
 Container = {}
 setmetatable(Container, {__index = Element})
@@ -74,7 +75,7 @@ function Container:clear(start_x, start_y, end_x, end_y)
 
 	local x, y = self:getPos()
 	local _, bg = self:getStyleOverride():getOptions("standard")
-	term.setBackgroundColour(bg)
+	Output.setBackgroundColour(bg)
 
 	start_x = start_x or x
 	start_y = start_y or y
@@ -84,8 +85,8 @@ function Container:clear(start_x, start_y, end_x, end_y)
 
 	for i = start_y, math.min(y + self.height - 1, end_y) do
 		for j = start_x, math.min(x + self.width - 1, end_x) do
-			term.setCursorPos(j, i)
-			term.write(" ")
+			Output.setCursorPos(j, i)
+			Output.write(" ")
 		end
 	end
 end

@@ -1,6 +1,7 @@
 Element = require("display.element")
 ElementTypes = require("display.element_types")
 Utils = require("display.utils")
+Output = require("display.output")
 
 Textbox = {}
 setmetatable(Textbox, {__index = Element})
@@ -41,8 +42,8 @@ function Textbox:draw(x, y, start_x, start_y, end_x, end_y)
 	end_y = end_y or y + self.height - 1
 
 
-	term.setTextColor(fg)
-	term.setBackgroundColor(bg)
+	Output.setTextColor(fg)
+	Output.setBackgroundColor(bg)
 	for i = 1, #lines do
 		local line = lines[i]
 
@@ -52,8 +53,8 @@ function Textbox:draw(x, y, start_x, start_y, end_x, end_y)
 			local char_x, char_y = x + j - 1, y + i - 1
 
 			if (char_x <= end_x and char_x >= start_x and char_y <= end_y and char_y >= start_y) then
-				term.setCursorPos(char_x, char_y)
-				term.write(char)
+				Output.setCursorPos(char_x, char_y)
+				Output.write(char)
 			end
 		end
 	end

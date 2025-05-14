@@ -1,9 +1,10 @@
 Container = require("display.container")
+Output = require("display.output")
 
 Screen = {}
 setmetatable(Screen, {__index = Container})
 
-TIMER_RATE = 1
+TIMER_RATE = 0.1
 
 function Screen:new(style)
 	local rows, cols = term.getSize()
@@ -36,6 +37,7 @@ function Screen:run()
     Utils.startTimer(TIMER_RATE)
 	while true do
         self:draw()
+        Output.update()
 		self:handleEvents()
 	end
 end
