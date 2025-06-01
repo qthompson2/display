@@ -1,7 +1,7 @@
 Element = require("display.element")
 ElementTypes = require("display.element_types")
 Utils = require("display.utils")
-Output = require("display.output")
+Output = require("bin.cc-output")
 
 Container = {}
 setmetatable(Container, {__index = Element})

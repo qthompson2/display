@@ -1,5 +1,5 @@
 Container = require("display.container")
-Output = require("display.output")
+Output = require("bin.cc-output")
 
 Screen = {}
 setmetatable(Screen, {__index = Container})
