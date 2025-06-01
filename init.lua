@@ -8,15 +8,15 @@ if not fs.exists("/bin/cc-output") then
 end
 
 return {
-	Style = require("display.style"),
+	Style = require("bin.display.style"),
 	elements = {
-		Element = require("display.element"),
-		Textbox = require("display.textbox"),
+		Element = require("bin.display.element"),
+		Textbox = require("bin.display.textbox"),
 	},
 	containers = {
-		Container = require("display.container"),
-		Screen = require("display.screen"),
+		Container = require("bin.display.container"),
+		Screen = require("bin.display.screen"),
 	},
-	ElementTypes = require("display.element_types"),
-	Utils = require("display.utils"),
+	ElementTypes = require("bin.display.element_types"),
+	Utils = require("bin.display.utils"),
 }

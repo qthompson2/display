@@ -1,5 +1,5 @@
-ElementTypes = require("display.element_types")
-Style = require("display.style")
+ElementTypes = require("bin.display.element_types")
+Style = require("bin.display.style")
 
 Element = {}
 

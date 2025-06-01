@@ -1,6 +1,6 @@
-Element = require("display.element")
-ElementTypes = require("display.element_types")
-Utils = require("display.utils")
+Element = require("bin.display.element")
+ElementTypes = require("bin.display.element_types")
+Utils = require("bin.display.utils")
 Output = require("bin.cc-output")
 
 Container = {}

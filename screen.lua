@@ -1,4 +1,4 @@
-Container = require("display.container")
+Container = require("bin.display.container")
 Output = require("bin.cc-output")
 
 Screen = {}
