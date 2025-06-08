@@ -57,7 +57,26 @@ function Container:getChild(index)
 end
 
 function Container:getChildren()
-	return Utils.deepCopy(self.children)
+	return self.children
+end
+
+function Container:getSelectableChildren()
+	local selectable_children = {}
+	for _, child in ipairs(self.children) do
+		if ElementTypes.isSelectable(child:getType()) then
+			table.insert(selectable_children, child)
+
+			if type(child.getSelectableChildren) == "function" then
+				local selectable_children_of_child = child:getSelectableChildren()
+
+				for _, sub_child in ipairs(selectable_children_of_child) do
+					table.insert(selectable_children, sub_child)
+				end
+			end
+		end
+	end
+
+	return selectable_children
 end
 
 function Container:isWithin(x1, y1, x2, y2)
@@ -75,6 +94,12 @@ function Container:clear(start_x, start_y, end_x, end_y)
 
 	local x, y = self:getPos()
 	local _, bg = self:getStyleOverride():getOptions("standard")
+	if self.disabled then
+		_, bg = self:getStyleOverride():getOptions("disabled")
+	elseif self.selected then
+		_, bg = self:getStyleOverride():getOptions("selected")
+	end
+
 	Output.setBackgroundColour(bg)
 
 	start_x = start_x or x

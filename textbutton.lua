@@ -7,7 +7,7 @@ setmetatable(TextButton, {__index = Textbox})
 function TextButton:new(text, x, y, width, height, style)
 	local obj = Textbox:new(text, x, y, width, height, style)
 
-	obj.type = ElementTypes.TEXTBUTTON
+	obj.type = ElementTypes.TEXT_BUTTON
 	obj.action = nil  -- Placeholder for action to be set later
 
 	setmetatable(obj, self)

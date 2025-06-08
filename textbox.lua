@@ -9,12 +9,14 @@ setmetatable(Textbox, {__index = Element})
 function Textbox:new(text, x, y, width, height, style)
 	local obj = Element:new(x, y, style)
 
-	obj.width = width or 1
+	text = text or ""
+
+	obj.width = width or #text
 	obj.height = height or 1
 
-	obj.type = ElementTypes.TEXTBOX
+	obj.type = ElementTypes.TEXT_BOX
 
-	obj.text = text or ""
+	obj.text = text
 
 	setmetatable(obj, self)
 	self.__index = self
