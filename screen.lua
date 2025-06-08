@@ -12,7 +12,7 @@ TIMER_RATE = 0.1
 function Screen:new(style)
 	local rows, cols = term.getSize()
 	local obj = Container:new(1, 1, rows, cols, style)
-	obj.listeners = DEFAULT_LISTENERS
+	obj.listeners = Utils.deepCopy(DEFAULT_LISTENERS)
 	obj.running = false
 
 	obj.current_selection = nil
@@ -67,7 +67,6 @@ function Screen:changeSelection(dir)
 	local selectable_elements = self:getSelectableChildren()
 
 	if #selectable_elements == 0 then
-		error("No selectable elements found in the screen.")
 		return
 	end
 
@@ -82,9 +81,9 @@ function Screen:changeSelection(dir)
 			self.current_selection = #selectable_elements
 		end
 
-		selectable_elements[self.current_selection].selected = true
+		selectable_elements[self.current_selection]:setSelected(true)
 	else
-		selectable_elements[self.current_selection].selected = false
+		selectable_elements[self.current_selection]:setSelected(false)
 		if dir == 1 then
 			self.current_selection = self.current_selection + 1
 			if self.current_selection > #selectable_elements then
@@ -97,7 +96,7 @@ function Screen:changeSelection(dir)
 			end
 		end
 
-		selectable_elements[self.current_selection].selected = true
+		selectable_elements[self.current_selection]:setSelected(true)
 	end
 end
 

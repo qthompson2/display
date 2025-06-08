@@ -20,6 +20,7 @@ function Element:new(x, y, style)
 	obj.type = ElementTypes.ELEMENT
 
 	obj.disabled = false
+	obj.selected = false
 
 	setmetatable(obj, self)
 	self.__index = self
@@ -75,6 +76,18 @@ end
 
 function Element:getType()
 	return self.type
+end
+
+function Element:getSelected()
+	return self.selected
+end
+
+function Element:setSelected(selected)
+	if type(selected) ~= "boolean" then
+		error("Element:setSelected() expects a boolean value.")
+	end
+
+	self.selected = selected
 end
 
 return Element

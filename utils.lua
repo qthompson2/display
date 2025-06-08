@@ -1,6 +1,6 @@
 local function deepCopy(t)
 	local copy = {}
-	for index, entry in ipairs(t) do
+	for index, entry in pairs(t) do
 		if type(entry) == "table" then
 			copy[index] = deepCopy(entry)
 		else
@@ -69,6 +69,14 @@ local function stopAllTimers()
 	end
 end
 
+local function sortByPos(a, b)
+	if a.y == b.y then
+		return a.x < b.x
+	else
+		return a.y < b.y
+	end
+end
+
 return {
 	deepCopy = deepCopy,
 	merge = merge,
@@ -76,4 +84,7 @@ return {
 	wrap = wrap,
     startTimer = startTimer,
     stopAllTimers = stopAllTimers,
+	sorting_functions = {
+		sortByPos = sortByPos,
+	},
 }

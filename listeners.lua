@@ -7,6 +7,19 @@ local function keyDownListener(screen, event_data)
 		else
 			screen:changeSelection(1)
 		end
+	elseif key == keys.enter then
+		local selectable_elements = screen:getSelectableChildren()
+
+		if #selectable_elements > 0 then
+			local selected_element = selectable_elements[screen.current_selection]
+			if selected_element then
+				if selected_element:getType() == ElementTypes.TEXT_BUTTON then
+					if type(selected_element:getAction()) == "function" then
+						selected_element:getAction()()
+					end
+				end
+			end
+		end
 	end
 end
 

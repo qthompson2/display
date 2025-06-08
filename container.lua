@@ -165,4 +165,16 @@ function Container:getScrollPos()
 	return self.scroll_x, self.scroll_y
 end
 
+function Container:setSelected(selected)
+	if type(selected) ~= "boolean" then
+		error("Container:setSelected() expects a boolean value.")
+	end
+
+	self.selected = selected
+
+	for _, child in ipairs(self.children) do
+		child:setSelected(selected)
+	end
+end
+
 return Container
