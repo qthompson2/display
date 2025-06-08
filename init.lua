@@ -12,6 +12,7 @@ return {
 	elements = {
 		Element = require("bin.display.element"),
 		Textbox = require("bin.display.textbox"),
+		TextButton = require("bin.display.textbutton"),
 	},
 	containers = {
 		Container = require("bin.display.container"),

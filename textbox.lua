@@ -33,6 +33,11 @@ function Textbox:draw(x, y, start_x, start_y, end_x, end_y)
 	x, y = self:getPos()
 
 	local fg, bg = self:getStyleOverride():getOptions("standard")
+	if self.disabled then
+		fg, bg = self:getStyleOverride():getOptions("disabled")
+	elseif self.selected then
+		fg, bg = self:getStyleOverride():getOptions("selected")
+	end
 
 	local lines = Utils.wrap(self.text, self.width)
 
