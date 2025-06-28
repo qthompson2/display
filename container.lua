@@ -121,6 +121,8 @@ function Container:draw(x, y, start_x, start_y, end_x, end_y)
 		return
 	end
 
+	local original_x, original_y = self:getPos()
+
 	self:clear(x, y, end_x, end_y)
 
 	self:setPos(x, y)
@@ -142,11 +144,13 @@ function Container:draw(x, y, start_x, start_y, end_x, end_y)
 				y + child_y - 1 - cur_y,
 				x,
 				y,
-				math.min(end_x, start_x + self.width - 1),
-				math.min(end_y, start_y + self.height - 1)
+				math.min(end_x, x + self.width - 1),
+				math.min(end_y, y + self.height - 1)
 			)
 		end
 	end
+
+	self:setPos(original_x, original_y)
 end
 
 function Container:scroll(x, y)

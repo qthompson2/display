@@ -23,6 +23,16 @@ local function keyDownListener(screen, event_data)
 	end
 end
 
+local function terminateListener(screen, _)
+	term.clear()
+	term.setCursorPos(1, 1)
+	term.setTextColor(colours.red)
+	term.setBackgroundColor(colours.black)
+	print("Terminated")
+	term.setTextColor(colours.white)
+end
+
 return {
 	["key"] = keyDownListener,
+	["terminate"] = terminateListener,
 }
