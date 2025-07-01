@@ -1,8 +1,8 @@
-Container = require("bin.display.container")
-Output = require("bin.cc-output")
-DEFAULT_LISTENERS = require("bin.display.listeners")
-ElementTypes = require("bin.display.element_types")
-Utils = require("bin.display.utils")
+Container = require("display.container")
+Output = require("cc-output")
+DEFAULT_LISTENERS = require("display.listeners")
+ElementTypes = require("display.element_types")
+Utils = require("display.utils")
 
 Screen = {}
 setmetatable(Screen, {__index = Container})

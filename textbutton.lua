@@ -1,5 +1,5 @@
-Textbox = require("bin.display.textbox")
-ElementTypes = require("bin.display.element_types")
+Textbox = require("display.textbox")
+ElementTypes = require("display.element_types")
 
 TextButton = {}
 setmetatable(TextButton, {__index = Textbox})
