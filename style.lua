@@ -13,8 +13,8 @@ function Style:new(options)
 
 		hidden = options.hidden or false,
 
-		horizontal_scroll = options.horizontal_scroll or true,
-		vertical_scroll = options.vertical_scroll or true,
+		horizontal_scroll = options.horizontal_scroll or false,
+		vertical_scroll = options.vertical_scroll or false,
 	}
 
 	local obj = {}

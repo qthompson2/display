@@ -13,6 +13,8 @@ return {
 	containers = {
 		Container = require("display.container"),
 		Screen = require("display.screen"),
+		OrderedContainer = require("display.ordered_container"),
+		Column = require("display.column"),
 	},
 	ElementTypes = require("display.element_types"),
 	Utils = require("display.utils"),
