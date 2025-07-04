@@ -15,6 +15,7 @@ return {
 		Screen = require("display.screen"),
 		OrderedContainer = require("display.ordered_container"),
 		Column = require("display.column"),
+		Row = require("display.row"),
 	},
 	ElementTypes = require("display.element_types"),
 	Utils = require("display.utils"),
