@@ -35,8 +35,14 @@ function Row:addChild(child)
 end
 
 function Row:scroll(x, _)
-	if self.scroll_x > 0 and self.scroll_x < self._rightmost_point then
-		Container.scroll(self, x, 0)
+	if x == 1 then
+		if self.scroll_x >= 0 and self.scroll_x < self._rightmost_point then
+			Container.scroll(self, x, 0)
+		end
+	elseif x == -1 then
+		if self.scroll_x > 0 and self.scroll_x <= self._rightmost_point then
+			Container.scroll(self, x, 0)
+		end
 	end
 end
 

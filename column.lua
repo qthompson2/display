@@ -35,8 +35,14 @@ function Column:addChild(child)
 end
 
 function Column:scroll(_, y)
-	if self.scroll_y > 0 and self.scroll_y < self._lowest_point then
-		Container.scroll(self, 0, y)
+	if y == 1 then
+		if self.scroll_y >= 0 and self.scroll_y < self._lowest_point then
+			Container.scroll(self, 0, y)
+		end
+	elseif y == -1 then
+		if self.scroll_y > 0 and self.scroll_y <= self._lowest_point then
+			Container.scroll(self, 0, y)
+		end
 	end
 end
 
