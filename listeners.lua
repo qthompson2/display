@@ -56,7 +56,20 @@ local function terminateListener(_, _)
 	term.setTextColor(colours.white)
 end
 
+local function mouseScrollListener(screen, event_data)
+	local dir, x, y = event_data[2], event_data[3], event_data[4] -- Add functionality for selecting element with x, y when mouse functionality is implemented
+
+	if screen.current_selection ~= nil then
+		local selected_element = screen:getSelectableChildren()[screen.current_selection]
+
+		if selected_element and ElementTypes.isScrollable(selected_element:getType()) then
+			selected_element:scroll(0, dir)
+		end
+	end
+end
+
 return {
 	["key"] = keyDownListener,
 	["terminate"] = terminateListener,
+	["mouse_scroll"] = mouseScrollListener,
 }
