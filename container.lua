@@ -94,6 +94,7 @@ function Container:draw()
 		local child_x, child_y = child:getPos()
 		child:setStyleOverride(self.style)
 		child._window.reposition(child_x - self.scroll_x, child_y - self.scroll_y, child.width, child.height, self._window)
+		child._parent = self
 		child:draw()
 	end
 end
@@ -124,6 +125,11 @@ function Container:setSelected(selected)
 	for _, child in ipairs(self.children) do
 		child:setSelected(selected)
 	end
+end
+
+function Container:panToCoordinate(x, y)
+	self.scroll_x = x - 1
+	self.scroll_y = y - 1
 end
 
 return Container
