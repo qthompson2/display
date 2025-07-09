@@ -7,10 +7,7 @@ Container = {}
 setmetatable(Container, {__index = Element})
 
 function Container:new(x, y, width, height, style)
-	local obj = Element:new(x, y, style)
-
-	obj.width = width or 1
-	obj.height = height or 1
+	local obj = Element:new(x, y, width, height, style)
 
 	obj.type = ElementTypes.CONTAINER
 
@@ -87,70 +84,18 @@ function Container:isWithin(x1, y1, x2, y2)
 	return (x1 <= end_x and x2 >= cur_x and y1 <= end_y and y2 >= cur_y)
 end
 
-function Container:clear(start_x, start_y, end_x, end_y)
+function Container:draw()
 	if self.style.hidden then
 		return
 	end
 
-	local x, y = self:getPos()
-	local _, bg = self:getStyleOverride():getOptions("standard")
-	if self.disabled then
-		_, bg = self:getStyleOverride():getOptions("disabled")
-	elseif self.selected then
-		_, bg = self:getStyleOverride():getOptions("selected")
-	end
-
-	Output.setBackgroundColour(bg)
-
-	start_x = start_x or x
-	start_y = start_y or y
-
-	end_x = end_x or start_x + self.width - 1
-	end_y = end_y or start_y + self.height - 1
-
-	for i = start_y, math.min(y + self.height - 1, end_y) do
-		for j = start_x, math.min(x + self.width - 1, end_x) do
-			Output.setCursorPos(j, i)
-			Output.write(" ")
-		end
-	end
-end
-
-function Container:draw(x, y, start_x, start_y, end_x, end_y)
-	if self.style.hidden then
-		return
-	end
-
-	local original_x, original_y = self:getPos()
-
-	self:clear(x, y, end_x, end_y)
-
-	self:setPos(x, y)
-	x, y = self:getPos()
-	start_x = start_x or x
-	start_y = start_y or y
-	end_x = end_x or start_x + self.width - 1
-	end_y = end_y or start_y + self.height - 1
-
-	local cur_x, cur_y = self:getScrollPos()
-
+	self:clear()
 	for _, child in ipairs(self.children) do
 		local child_x, child_y = child:getPos()
-
 		child:setStyleOverride(self.style)
-		if child:isWithin(cur_x, cur_y, math.abs(cur_x) + self.width - 1, math.abs(cur_y) + self.height - 1) then
-			child:draw(
-				x + child_x - 1 - cur_x,
-				y + child_y - 1 - cur_y,
-				x,
-				y,
-				math.min(end_x, x + self.width - 1),
-				math.min(end_y, y + self.height - 1)
-			)
-		end
+		child._window.reposition(child_x - self.scroll_x, child_y - self.scroll_y, child.width, child.height, self._window)
+		child:draw()
 	end
-
-	self:setPos(original_x, original_y)
 end
 
 function Container:scroll(x, y)

@@ -1,13 +1,18 @@
+Output = require("cc-output")
 ElementTypes = require("display.element_types")
 Style = require("display.style")
 
 Element = {}
 
-function Element:new(x, y, style)
+function Element:new(x, y, width, height, style)
 	local obj = {}
 
 	obj.x = x or 1
 	obj.y = y or 1
+	obj.width = width or 1
+	obj.height = height or 1
+
+	obj._window = window.create(Output, obj.x, obj.y, obj.width, obj.height, true)
 
 	obj.style = style or Style:new()
 	if style ~= nil then
@@ -28,12 +33,29 @@ function Element:new(x, y, style)
 	return obj
 end
 
-function Element:draw(x, y, start_x, start_y, end_x, end_y)
+function Element:draw()
 	error("Element:draw() must be overridden in subclasses!")
 end
 
 function Element:isWithin(x1, y1, x2, y2)
 	error("Element:isWithin() must be overridden in subclasses!")
+end
+
+function Element:clear()
+	if self._window then
+		local style = self:getStyleOverride()
+
+		local fg, bg = style:getOptions("standard")
+		if self.disabled then
+			fg, bg = style:getOptions("disabled")
+		elseif self.selected then
+			fg, bg = style:getOptions("selected")
+		end
+
+		self._window.setTextColour(fg)
+		self._window.setBackgroundColour(bg)
+		self._window.clear()
+	end
 end
 
 function Element:getDimensions()

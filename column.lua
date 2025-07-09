@@ -6,11 +6,15 @@ Column = {}
 setmetatable(Column, {__index = OrderedContainer})
 
 function Column:new(x, y, width, height, style)
-	if not style then
+	local style_is_nil = style == nil
+	if style_is_nil then
 		style = Style:new()
 		style.vertical_scroll = true
 	end
 	local obj = OrderedContainer:new(x, y, width, height, style)
+	if style_is_nil then
+		obj.allow_style_override = true
+	end
 	obj._lowest_point = 0
 
 	obj.type = ElementTypes.COLUMN
@@ -36,11 +40,11 @@ end
 
 function Column:scroll(_, y)
 	if y == 1 then
-		if self.scroll_y >= 0 and self.scroll_y < self._lowest_point then
+		if self.scroll_y < self._lowest_point - #self.children then
 			Container.scroll(self, 0, y)
 		end
 	elseif y == -1 then
-		if self.scroll_y > 0 and self.scroll_y <= self._lowest_point then
+		if self.scroll_y > 0 then
 			Container.scroll(self, 0, y)
 		end
 	end

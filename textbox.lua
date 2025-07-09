@@ -24,49 +24,22 @@ function Textbox:new(text, x, y, width, height, style)
 	return obj
 end
 
-function Textbox:draw(x, y, start_x, start_y, end_x, end_y)
+function Textbox:draw()
 	if self.style.hidden then
 		return
 	end
 
-	local original_x, original_y = self:getPos()
-
-	self:setPos(x, y)
-	x, y = self:getPos()
-
-	local fg, bg = self:getStyleOverride():getOptions("standard")
-	if self.disabled then
-		fg, bg = self:getStyleOverride():getOptions("disabled")
-	elseif self.selected then
-		fg, bg = self:getStyleOverride():getOptions("selected")
-	end
+	self:clear()
 
 	local lines = Utils.wrap(self.text, self.width)
-
-	start_x = start_x or x
-	start_y = start_y or y
-	end_x = end_x or x + self.width - 1
-	end_y = end_y or y + self.height - 1
-
-
-	Output.setTextColor(fg)
-	Output.setBackgroundColor(bg)
-	for i = 1, #lines do
-		local line = lines[i]
-
-		for j = 1, #line do
-			local char = line:sub(j, j)
-
-			local char_x, char_y = x + j - 1, y + i - 1
-
-			if (char_x <= end_x and char_x >= start_x and char_y <= end_y and char_y >= start_y) then
-				Output.setCursorPos(char_x, char_y)
-				Output.write(char)
-			end
+	for i, line in ipairs(lines) do
+		if i <= self.height then
+			self._window.setCursorPos(1, i)
+			self._window.write(line)
+		else
+			break
 		end
 	end
-
-	self:setPos(original_x, original_y)
 end
 
 function Textbox:isWithin(x1, y1, x2, y2)

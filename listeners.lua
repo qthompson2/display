@@ -26,21 +26,13 @@ local function keyDownListener(screen, event_data)
 
 			if selected_element and ElementTypes.isScrollable(selected_element:getType()) then
 				if key == keys.left then
-					if selected_element:getStyleOverride().horizontal_scroll then
-						selected_element:scroll(-1, 0)
-					end
+					selected_element:scroll(-1, 0)
 				elseif key == keys.right then
-					if selected_element:getStyleOverride().horizontal_scroll then
-						selected_element:scroll(1, 0)
-					end
+					selected_element:scroll(1, 0)
 				elseif key == keys.up then
-					if selected_element:getStyleOverride().vertical_scroll then
-						selected_element:scroll(0, -1)
-					end
+					selected_element:scroll(0, -1)
 				elseif key == keys.down then
-					if selected_element:getStyleOverride().vertical_scroll then
-						selected_element:scroll(0, 1)
-					end
+					selected_element:scroll(0, 1)
 				end
 			end
 		end
