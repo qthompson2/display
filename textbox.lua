@@ -42,14 +42,6 @@ function Textbox:draw()
 	end
 end
 
-function Textbox:isWithin(x1, y1, x2, y2)
-	local cur_x, cur_y = self:getPos()
-	local end_x = cur_x + self.width - 1
-	local end_y = cur_y + self.height - 1
-
-	return (x1 <= end_x and x2 >= cur_x and y1 <= end_y and y2 >= cur_y)
-end
-
 function Textbox:getText()
 	return self.text
 end

@@ -51,11 +51,55 @@ end
 local function mouseScrollListener(screen, event_data)
 	local dir, x, y = event_data[2], event_data[3], event_data[4] -- Add functionality for selecting element with x, y when mouse functionality is implemented
 
-	if screen.current_selection ~= nil then
-		local selected_element = screen:getSelectableChildren()[screen.current_selection]
+	screen.current_selection = nil
 
-		if selected_element and ElementTypes.isScrollable(selected_element:getType()) then
-			selected_element:scroll(0, dir)
+	local element = screen:getElementAtPos(x, y)
+	if element then
+		if ElementTypes.isScrollable(element:getType()) then
+			if dir == 1 then
+				if screen.held_keys[keys.leftShift] or screen.held_keys[keys.rightShift] then
+					element:scroll(-1, 0)
+				else
+					element:scroll(0, -1)
+				end
+			elseif dir == -1 then
+				if screen.held_keys[keys.leftShift] or screen.held_keys[keys.rightShift] then
+					element:scroll(1, 0)
+				else
+					element:scroll(0, 1)
+				end
+			end
+		elseif element._parent then
+			if dir == 1 then
+				if screen.held_keys[keys.leftShift] or screen.held_keys[keys.rightShift] then
+					element._parent:scroll(-1, 0)
+				else
+					element._parent:scroll(0, -1)
+				end
+			elseif dir == -1 then
+				if screen.held_keys[keys.leftShift] or screen.held_keys[keys.rightShift] then
+					element._parent:scroll(1, 0)
+				else
+					element._parent:scroll(0, 1)
+				end
+			end
+		end
+	end
+end
+
+local function mouseClickListener(screen, event_data)
+	local button, x, y = event_data[2], event_data[3], event_data[4]
+
+	screen.current_selection = nil
+
+	local element = screen:getElementAtPos(x, y)
+	if element then
+		if button == 1 then
+			if element:getType() == ElementTypes.TEXT_BUTTON then
+				if type(element:getAction()) == "function" then
+					element:getAction()()
+				end
+			end
 		end
 	end
 end
@@ -64,4 +108,5 @@ return {
 	["key"] = keyDownListener,
 	["terminate"] = terminateListener,
 	["mouse_scroll"] = mouseScrollListener,
+	["mouse_click"] = mouseClickListener,
 }

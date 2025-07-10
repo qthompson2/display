@@ -37,8 +37,12 @@ function Element:draw()
 	error("Element:draw() must be overridden in subclasses!")
 end
 
-function Element:isWithin(x1, y1, x2, y2)
-	error("Element:isWithin() must be overridden in subclasses!")
+function Element:checkPos(x, y)
+	local start_x, start_y = self._window.getPosition()
+	local end_x = start_x + self.width - 1
+	local end_y = start_y + self.height - 1
+
+	return (x >= start_x and x <= end_x and y >= start_y and y <= end_y)
 end
 
 function Element:clear()

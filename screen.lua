@@ -98,12 +98,12 @@ function Screen:changeSelection(dir)
 
 		selectable_elements[self.current_selection]:setSelected(true)
 		if selectable_elements[self.current_selection]._parent then
-			selectable_elements[self.current_selection]._parent:panToCoordinate(selectable_elements[self.current_selection]:getPos())
+			selectable_elements[self.current_selection]._parent:panToPos(selectable_elements[self.current_selection]:getPos())
 		end
 	end
 end
 
 function Screen:scroll(_, _) end
-function Screen:panToCoordinate(_, _) end
+function Screen:panToPos(_, _) end
 
 return Screen

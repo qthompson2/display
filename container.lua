@@ -76,14 +76,6 @@ function Container:getSelectableChildren()
 	return selectable_children
 end
 
-function Container:isWithin(x1, y1, x2, y2)
-	local cur_x, cur_y = self:getPos()
-	local end_x = cur_x + self.width - 1
-	local end_y = cur_y + self.height - 1
-
-	return (x1 <= end_x and x2 >= cur_x and y1 <= end_y and y2 >= cur_y)
-end
-
 function Container:draw()
 	if self.style.hidden then
 		return
@@ -127,9 +119,36 @@ function Container:setSelected(selected)
 	end
 end
 
-function Container:panToCoordinate(x, y)
+function Container:panToPos(x, y)
 	self.scroll_x = x - 1
 	self.scroll_y = y - 1
+end
+
+function Container:getInnerPos(x, y)
+	local cur_x, cur_y = self:getPos()
+	local scr_x, scr_y = self:getScrollPos()
+
+	local inner_x = x - (cur_x + 1) - scr_x
+	local inner_y = y - (cur_y + 1) - scr_y
+	return inner_x, inner_y
+end
+
+function Container:getElementAtPos(x, y)
+	for _, child in ipairs(self.children) do
+		if child:checkPos(x, y) then
+			if child.children and #child.children > 0 then
+				local result = child:getElementAtPos(self:getInnerPos(x, y))
+				if result then
+					return result
+				else
+					return child
+				end
+			else
+				return child
+			end
+		end
+	end
+	return nil
 end
 
 return Container
